@@ -11,7 +11,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textView3;
     private TextView textView4;
     public Summoner summoner;
+    public List<Stats> statsList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         textView3 = (TextView) findViewById(R.id.textView3);
         textView4 = (TextView) findViewById(R.id.textView4);
         summoner = new Summoner("35711275");
+        statsList = new ArrayList<Stats>();
     }
 
 
@@ -71,13 +75,11 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject match = jsonArray.getJSONObject(i);
                     String temp = match.getString("gameId");
                     summoner.gameIds.add(temp);
-                }
-                //String temp = json.getJSONObject("gladdyy").getString("id");
-                textView2.setText("hi");
+                //textView2.setText("hi");
                 textView4.setText(summoner.gameIds.toString());
                 //String temp = json.getString("riotschmick");
 
-            }
+            }}
             catch (Exception e) {e.printStackTrace();}
 
         }
@@ -127,12 +129,25 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < jsonArray2.length(); i++) {
                     JSONObject match = jsonArray2.getJSONObject(i);
                     if (match.getString("participantId").equals(parId)){
-                        String temp = match.getString("stats");
-                        textView3.setText(temp);
+                        JSONObject temp = new JSONObject(match.getString("stats"));
+                        Stats newStats = new Stats();
+                        newStats.win = temp.getString("win");
+                        newStats.largestCriticalStrike = temp.getString("largestCriticalStrike");
+                        newStats.totalDamageDealt = temp.getString("totalDamageDealt");
+                        newStats.largestMultiKill = temp.getString("largestMultiKill");
+                        newStats.largestKillingSpree = temp.getString("largestKillingSpree");
+                        newStats.goldEarned = temp.getString("goldEarned");
+                        newStats.deaths = temp.getString("deaths");
+                        newStats.turretKills = temp.getString("turretKills");
+                        newStats.kills = temp.getString("kills");
+                        newStats.assists = temp.getString("assists");
+                        newStats.totalMinionsKilled = temp.getString("totalMinionsKilled");
+                        newStats.totalDamageDealtToChampions = temp.getString("totalDamageDealtToChampions");
+                        statsList.add(newStats);
                         break;
                     }
                 }
-
+                textView3.setText(statsList.get(0).goldEarned);
             } catch (Exception e) {
                 e.printStackTrace();
             }
