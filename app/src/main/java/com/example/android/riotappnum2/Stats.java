@@ -17,6 +17,7 @@ public class Stats {
     public String assists;
     public String totalMinionsKilled;
     public String totalDamageDealtToChampions;
+    public String champKey;
     //after this go into timeline object and show those for extra data
 
     public Stats()

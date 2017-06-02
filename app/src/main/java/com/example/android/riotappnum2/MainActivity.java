@@ -34,8 +34,15 @@ public class MainActivity extends AppCompatActivity {
         textView4 = (TextView) findViewById(R.id.textView4);
         summoner = new Summoner("35711275");
         statsList = new ArrayList<Stats>();
+        DownloadWebPageTask task = new DownloadWebPageTask();
+        task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/50300517/recent?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+    }
 
     private class DownloadWebPageTask extends AsyncTask<String, Void, String> {
         @Override
@@ -75,9 +82,10 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject match = jsonArray.getJSONObject(i);
                     String temp = match.getString("gameId");
                     summoner.gameIds.add(temp);
-                //textView2.setText("hi");
-                textView4.setText(summoner.gameIds.toString());
-                //String temp = json.getString("riotschmick");
+
+                textView4.setText("getting last 20 games done");
+                    GetMatchData getMatchData = new GetMatchData();
+                    getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(0) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
 
             }}
             catch (Exception e) {e.printStackTrace();}
@@ -143,10 +151,12 @@ public class MainActivity extends AppCompatActivity {
                         newStats.assists = temp.getString("assists");
                         newStats.totalMinionsKilled = temp.getString("totalMinionsKilled");
                         newStats.totalDamageDealtToChampions = temp.getString("totalDamageDealtToChampions");
+                        newStats.champKey = match.getString("championId");
                         statsList.add(newStats);
                         break;
                     }
                 }
+
                 textView3.setText(statsList.get(0).goldEarned);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -156,11 +166,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
-        DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/50300517/recent?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
-        GetMatchData getMatchData = new GetMatchData();
-        getMatchData.execute(new String[] {"https://na1.api.riotgames.com/lol/match/v3/matches/2512249198?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25" });
-
+        int temp = Integer.parseInt(statsList.get(0).champKey);
+        textView2.setText(statsList.get(0).kills+"/"+statsList.get(0).deaths+"/"+statsList.get(0).assists);
     }
 
 
