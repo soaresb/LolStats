@@ -1,17 +1,36 @@
 package com.example.android.riotappnum2;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.JsonReader;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.spec.ECField;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,12 +38,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static java.lang.Thread.sleep;
+
 public class MainActivity extends AppCompatActivity {
     private TextView textView2;
     private TextView textView3;
     private TextView textView4;
+    private TextView textView5;
+    private ImageView imageView;
     public Summoner summoner;
     public List<Stats> statsList;
+    public String currentPage;
+    HashMap<String, String> champData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,19 +57,77 @@ public class MainActivity extends AppCompatActivity {
         textView2 = (TextView) findViewById(R.id.textView2);
         textView3 = (TextView) findViewById(R.id.textView3);
         textView4 = (TextView) findViewById(R.id.textView4);
+        textView5 = (TextView) findViewById(R.id.textView5);
+        imageView = (ImageView) findViewById(R.id.imageView);
+        try {
+            URL url = new URL("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/Aatrox.png");
+            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            imageView.setImageBitmap(bmp);
+        }
+        catch (Exception e){e.printStackTrace();}
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.games,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                currentPage = parentView.getItemAtPosition(position).toString();
+                Toast.makeText(parentView.getContext(), "You selected: " + currentPage,Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+        champData = new HashMap<String, String>();
         summoner = new Summoner("35711275");
         statsList = new ArrayList<Stats>();
+        loadJSONFromAsset();
         DownloadWebPageTask task = new DownloadWebPageTask();
         task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/50300517/recent?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
-    }
-
-    @Override
-    protected void onStart(){
-        super.onStart();
 
     }
 
-    private class DownloadWebPageTask extends AsyncTask<String, Void, String> {
+
+    public void loadJSONFromAsset() {
+        String json = null;
+        try {
+            InputStream is = getResources().openRawResource(R.raw.champions);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            //return null;
+        }
+        try {
+            JSONObject obj = new JSONObject(json);
+            JSONObject ex = obj.getJSONObject("data");
+            @SuppressWarnings("unchecked")
+            Iterator<String> keys = ex.keys();
+            while (keys.hasNext()) {
+                try {
+                    String key = keys.next();
+                    JSONObject value = (JSONObject) ex.get(key);
+                    champData.put(key,value.getString("name"));
+                }
+                catch(Exception e){e.printStackTrace();}
+            }
+            }
+
+
+         catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
             // we use the OkHttp library from https://github.com/square/okhttp
@@ -83,12 +166,17 @@ public class MainActivity extends AppCompatActivity {
                     String temp = match.getString("gameId");
                     summoner.gameIds.add(temp);
 
-                textView4.setText("getting last 20 games done");
-                    GetMatchData getMatchData = new GetMatchData();
-                    getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(0) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+                //textView4.setText("getting last 20 games done");
 
-            }}
+
+            }
+            GetMatchData getMatchData = new GetMatchData();
+            getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(Integer.valueOf(currentPage)) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+
+            }
             catch (Exception e) {e.printStackTrace();}
+//            Intent it = new Intent(MainActivity.this,SplashActivity.class);
+//            startActivity(it);
 
         }
     }
@@ -157,18 +245,60 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                textView3.setText(statsList.get(0).goldEarned);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
     }
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                //Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
 
     public void onClick(View view) {
+        new DownloadImageTask((ImageView) findViewById(R.id.imageView))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+champData.get(statsList.get(0).champKey)+".png");
         int temp = Integer.parseInt(statsList.get(0).champKey);
-        textView2.setText(statsList.get(0).kills+"/"+statsList.get(0).deaths+"/"+statsList.get(0).assists);
+        textView2.setText(champData.get(statsList.get(0).champKey));
+        textView3.setText(statsList.get(0).kills+"/"+statsList.get(0).deaths+"/"+statsList.get(0).assists);
+        if(statsList.get(0).win.equals("false")){
+            textView5.setText("LOSS\n");
+        }
+        else if(statsList.get(0).win.equals("true")){
+            textView5.setText("WIN\n");
+        }
+        else
+            textView5.setText("DRAW\n");
+        textView5.append("Total Damage Dealt to Champions : "+statsList.get(0).totalDamageDealtToChampions+"\n");
+        textView5.append("Total Gold Earned : "+statsList.get(0).goldEarned+"\n");
+        textView5.append("CS : "+statsList.get(0).totalMinionsKilled+"\n");
+        textView5.append("Largest Killing Spree : "+statsList.get(0).largestKillingSpree+"\n");
+        textView5.append("Largest Multi Kill : "+statsList.get(0).largestMultiKill+"\n");
+
     }
+
 
 
 }
