@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     public List<Stats> statsList;
     public String currentPage;
     HashMap<String, String> champData;
+    public int pageNum;
+    public boolean dropDown = false;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         textView4 = (TextView) findViewById(R.id.textView4);
         textView5 = (TextView) findViewById(R.id.textView5);
         imageView = (ImageView) findViewById(R.id.imageView);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
         try {
             URL url = new URL("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/Aatrox.png");
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
@@ -72,8 +78,16 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                currentPage = parentView.getItemAtPosition(position).toString();
-                Toast.makeText(parentView.getContext(), "You selected: " + currentPage,Toast.LENGTH_LONG).show();
+                pageNum=position;
+                if (!dropDown) {
+                    currentPage = parentView.getItemAtPosition(position).toString();
+                    Toast.makeText(parentView.getContext(), "You selected: " + currentPage, Toast.LENGTH_LONG).show();
+                    dropDown=true;
+                }
+                else{
+                    GetMatchData getMatchData = new GetMatchData();
+                    getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum+1) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+                }
             }
 
             @Override
@@ -84,7 +98,11 @@ public class MainActivity extends AppCompatActivity {
         });
         champData = new HashMap<String, String>();
         summoner = new Summoner("35711275");
-        statsList = new ArrayList<Stats>();
+        statsList = new ArrayList<Stats>(20);
+        for(int k=0;k<20;k++){
+            Stats temp = new Stats();
+            statsList.add(temp);
+        }
         loadJSONFromAsset();
         DownloadWebPageTask task = new DownloadWebPageTask();
         task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/50300517/recent?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
@@ -171,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
             GetMatchData getMatchData = new GetMatchData();
-            getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(Integer.valueOf(currentPage)) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+            getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(1) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
 
             }
             catch (Exception e) {e.printStackTrace();}
@@ -240,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
                         newStats.totalMinionsKilled = temp.getString("totalMinionsKilled");
                         newStats.totalDamageDealtToChampions = temp.getString("totalDamageDealtToChampions");
                         newStats.champKey = match.getString("championId");
-                        statsList.add(newStats);
+                        statsList.add(pageNum,newStats);
                         break;
                     }
                 }
@@ -278,24 +296,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
+        //progressBar.setVisibility(View.VISIBLE);
+        try {
+            Thread.sleep(100);
+            //progressBar.setVisibility(View.GONE);
+        }
+        catch (Exception e){e.printStackTrace();}
+
         new DownloadImageTask((ImageView) findViewById(R.id.imageView))
-                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+champData.get(statsList.get(0).champKey)+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+champData.get(statsList.get(pageNum).champKey)+".png");
         int temp = Integer.parseInt(statsList.get(0).champKey);
-        textView2.setText(champData.get(statsList.get(0).champKey));
-        textView3.setText(statsList.get(0).kills+"/"+statsList.get(0).deaths+"/"+statsList.get(0).assists);
-        if(statsList.get(0).win.equals("false")){
+        try {
+            textView2.setText(champData.get(statsList.get(pageNum).champKey));
+        }
+        catch (Exception e){e.printStackTrace();}
+        textView3.setText(statsList.get(pageNum).kills+"/"+statsList.get(pageNum).deaths+"/"+statsList.get(pageNum).assists);
+        if(statsList.get(pageNum).win.equals("false")){
             textView5.setText("LOSS\n");
         }
-        else if(statsList.get(0).win.equals("true")){
+        else if(statsList.get(pageNum).win.equals("true")){
             textView5.setText("WIN\n");
         }
         else
             textView5.setText("DRAW\n");
-        textView5.append("Total Damage Dealt to Champions : "+statsList.get(0).totalDamageDealtToChampions+"\n");
-        textView5.append("Total Gold Earned : "+statsList.get(0).goldEarned+"\n");
-        textView5.append("CS : "+statsList.get(0).totalMinionsKilled+"\n");
-        textView5.append("Largest Killing Spree : "+statsList.get(0).largestKillingSpree+"\n");
-        textView5.append("Largest Multi Kill : "+statsList.get(0).largestMultiKill+"\n");
+        textView5.append("Total Damage Dealt to Champions : "+statsList.get(pageNum).totalDamageDealtToChampions+"\n");
+        textView5.append("Total Gold Earned : "+statsList.get(pageNum).goldEarned+"\n");
+        textView5.append("CS : "+statsList.get(pageNum).totalMinionsKilled+"\n");
+        textView5.append("Largest Killing Spree : "+statsList.get(pageNum).largestKillingSpree+"\n");
+        textView5.append("Largest Multi Kill : "+statsList.get(pageNum).largestMultiKill+"\n");
 
     }
 
