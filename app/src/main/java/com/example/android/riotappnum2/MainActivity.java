@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else{
                     GetMatchData getMatchData = new GetMatchData();
-                    getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum+1) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+                    getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
                 }
             }
 
@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         loadJSONFromAsset();
         DownloadWebPageTask task = new DownloadWebPageTask();
         task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/50300517/recent?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+
 
     }
 
@@ -182,14 +183,15 @@ public class MainActivity extends AppCompatActivity {
                 {
                     JSONObject match = jsonArray.getJSONObject(i);
                     String temp = match.getString("gameId");
-                    summoner.gameIds.add(temp);
-
-                //textView4.setText("getting last 20 games done");
-
-
-            }
+                    String temp2 = match.getString("role");
+                    String temp3 = match.getString("lane");
+                    if(temp2.equals("NONE") && temp3.equals("MID"))
+                    {}
+                    else {summoner.gameIds.add(temp);}
+                }
+            int tempp = summoner.gameIds.size();
             GetMatchData getMatchData = new GetMatchData();
-            getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(1) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+            getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(0) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
 
             }
             catch (Exception e) {e.printStackTrace();}
