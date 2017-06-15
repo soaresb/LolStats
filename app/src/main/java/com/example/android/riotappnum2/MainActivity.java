@@ -71,6 +71,19 @@ public class MainActivity extends AppCompatActivity {
             imageView.setImageBitmap(bmp);
         }
         catch (Exception e){e.printStackTrace();}
+
+        champData = new HashMap<String, String>();
+        String s = getIntent().getStringExtra("ACCOUNTID");
+        String ss = getIntent().getStringExtra("ID");
+        summoner = new Summoner(ss);
+        statsList = new ArrayList<Stats>(20);
+        for(int k=0;k<20;k++){
+            Stats temp = new Stats();
+            statsList.add(temp);
+        }
+        loadJSONFromAsset();
+        DownloadWebPageTask task = new DownloadWebPageTask();
+        task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/"+s+"/recent?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.games,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -86,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else{
                     GetMatchData getMatchData = new GetMatchData();
-                    getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+                    try{
+                        getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});}
+                    catch (Exception e){e.printStackTrace();}
                 }
             }
 
@@ -96,17 +111,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-        champData = new HashMap<String, String>();
-        summoner = new Summoner("35711275");
-        statsList = new ArrayList<Stats>(20);
-        for(int k=0;k<20;k++){
-            Stats temp = new Stats();
-            statsList.add(temp);
-        }
-        loadJSONFromAsset();
-        DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/50300517/recent?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
-
 
     }
 
@@ -183,9 +187,9 @@ public class MainActivity extends AppCompatActivity {
                 {
                     JSONObject match = jsonArray.getJSONObject(i);
                     String temp = match.getString("gameId");
-                    String temp2 = match.getString("role");
-                    String temp3 = match.getString("lane");
-                    if(temp2.equals("NONE") && temp3.equals("MID"))
+                    String temp2 = match.getString("queue");
+
+                    if(!temp2.equals("420"))
                     {}
                     else {summoner.gameIds.add(temp);}
                 }
