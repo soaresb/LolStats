@@ -93,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 pageNum=position;
                 if (!dropDown) {
-                    currentPage = parentView.getItemAtPosition(position).toString();
-                    Toast.makeText(parentView.getContext(), "You selected: " + currentPage, Toast.LENGTH_LONG).show();
                     dropDown=true;
                 }
                 else{
