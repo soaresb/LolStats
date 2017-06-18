@@ -1,5 +1,7 @@
 package com.example.android.riotappnum2;
 
+import java.util.List;
+
 /**
  * Created by Brian's PC on 5/30/2017.
  */
@@ -18,11 +20,12 @@ public class Stats {
     public String totalMinionsKilled;
     public String totalDamageDealtToChampions;
     public String champKey;
+    public String[] items;
     //after this go into timeline object and show those for extra data
 
     public Stats()
     {
-
+        items = new String[7];
     }
 
 }

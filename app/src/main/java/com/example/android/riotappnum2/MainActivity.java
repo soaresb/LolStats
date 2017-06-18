@@ -1,5 +1,7 @@
 package com.example.android.riotappnum2;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -47,24 +49,39 @@ public class MainActivity extends AppCompatActivity {
     private TextView textView4;
     private TextView textView5;
     private ImageView imageView;
+    private ImageView item0;
+    private ImageView item2;
+    private ImageView item3;
+    private ImageView item4;
+    private ImageView item5;
+    private ImageView item6;
     public Summoner summoner;
     public List<Stats> statsList;
     public String currentPage;
     HashMap<String, String> champData;
     public int pageNum;
     public boolean dropDown = false;
+    public boolean firstTime = true;
+    ProgressDialog progress;
     ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         textView2 = (TextView) findViewById(R.id.textView2);
         textView3 = (TextView) findViewById(R.id.textView3);
         textView4 = (TextView) findViewById(R.id.textView4);
         textView5 = (TextView) findViewById(R.id.textView5);
+        item0 = (ImageView) findViewById(R.id.item0);
+        item2 = (ImageView) findViewById(R.id.item2);
+        item3 = (ImageView) findViewById(R.id.item3);
+        item4 = (ImageView) findViewById(R.id.item4);
+        item5 = (ImageView) findViewById(R.id.item5);
+        item6 = (ImageView) findViewById(R.id.item6);
         imageView = (ImageView) findViewById(R.id.imageView);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.GONE);
+//        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+//        progressBar.setVisibility(View.GONE);
         try {
             URL url = new URL("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/Aatrox.png");
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
@@ -111,7 +128,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    public void onStart() {
+        super.onStart();
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("Wait while loading...");
+        progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+        progress.show();
 
+
+    }
 
     public void loadJSONFromAsset() {
         String json = null;
@@ -262,6 +288,12 @@ public class MainActivity extends AppCompatActivity {
                         newStats.totalMinionsKilled = temp.getString("totalMinionsKilled");
                         newStats.totalDamageDealtToChampions = temp.getString("totalDamageDealtToChampions");
                         newStats.champKey = match.getString("championId");
+                        newStats.items[0]=temp.getString("item0");
+                        newStats.items[1]=temp.getString("item1");
+                        newStats.items[2]=temp.getString("item2");
+                        newStats.items[3]=temp.getString("item3");
+                        newStats.items[4]=temp.getString("item4");
+                        newStats.items[5]=temp.getString("item5");
                         statsList.add(pageNum,newStats);
                         break;
                     }
@@ -271,8 +303,55 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+            if(firstTime) {
+                tryShow();
+                firstTime=false;
+            }
+            else {onClick();}
         }
+    }
+    public void tryShow(){
+        try {
+            Thread.sleep(100);
+            //progressBar.setVisibility(View.GONE);
+        }
+        catch (Exception e){e.printStackTrace();}
+
+        new DownloadImageTask((ImageView) findViewById(R.id.imageView))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+champData.get(statsList.get(0).champKey)+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item0))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(0).items[0]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item2))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(0).items[1]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item3))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(0).items[2]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item4))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(0).items[3]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item5))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(0).items[4]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item6))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(0).items[5]+".png");
+//                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/1001.png");
+        //int temp = Integer.parseInt(statsList.get(0).champKey);
+        try {
+            textView2.setText(champData.get(statsList.get(0).champKey));
+        }
+        catch (Exception e){e.printStackTrace();}
+        textView3.setText(statsList.get(0).kills+"/"+statsList.get(0).deaths+"/"+statsList.get(0).assists);
+        if(statsList.get(0).win.equals("false")){
+            textView5.setText("LOSS\n");
+        }
+        else if(statsList.get(0).win.equals("true")){
+            textView5.setText("WIN\n");
+        }
+        else
+            textView5.setText("DRAW\n");
+        textView5.append("Total Damage Dealt to Champions : "+statsList.get(0).totalDamageDealtToChampions+"\n");
+        textView5.append("Total Gold Earned : "+statsList.get(0).goldEarned+"\n");
+        textView5.append("CS : "+statsList.get(0).totalMinionsKilled+"\n");
+        textView5.append("Largest Killing Spree : "+statsList.get(0).largestKillingSpree+"\n");
+        textView5.append("Largest Multi Kill : "+statsList.get(0).largestMultiKill+"\n");
+        progress.dismiss();
     }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
@@ -299,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onClick(View view) {
+    public void onClick() {
         //progressBar.setVisibility(View.VISIBLE);
         try {
             Thread.sleep(100);
@@ -309,6 +388,18 @@ public class MainActivity extends AppCompatActivity {
 
         new DownloadImageTask((ImageView) findViewById(R.id.imageView))
                 .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+champData.get(statsList.get(pageNum).champKey)+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item0))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(pageNum).items[0]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item2))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(pageNum).items[1]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item3))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(pageNum).items[2]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item4))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(pageNum).items[3]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item5))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(pageNum).items[4]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.item6))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(pageNum).items[5]+".png");
         int temp = Integer.parseInt(statsList.get(0).champKey);
         try {
             textView2.setText(champData.get(statsList.get(pageNum).champKey));
@@ -328,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
         textView5.append("CS : "+statsList.get(pageNum).totalMinionsKilled+"\n");
         textView5.append("Largest Killing Spree : "+statsList.get(pageNum).largestKillingSpree+"\n");
         textView5.append("Largest Multi Kill : "+statsList.get(pageNum).largestMultiKill+"\n");
-
+        progress.dismiss();
     }
 
 
