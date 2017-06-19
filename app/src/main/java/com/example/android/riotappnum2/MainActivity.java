@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -44,6 +49,7 @@ import okhttp3.Response;
 import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity {
+    BarChart barChart;
     private TextView textView2;
     private TextView textView3;
     private TextView textView4;
@@ -63,12 +69,20 @@ public class MainActivity extends AppCompatActivity {
     public boolean dropDown = false;
     public boolean firstTime = true;
     ProgressDialog progress;
+    ArrayList<BarEntry> barEntries;
+    ArrayList<String> xAxis;
     ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        barChart = (BarChart) findViewById(R.id.dmgGraph);
+        barEntries = new ArrayList<>();
+        BarDataSet barDataSet = new BarDataSet(barEntries,"");
+        xAxis = new ArrayList<>();
 
+//        BarData theData = new BarData(xAxis,barDataSet);
+//        barChart.setData(theData);
         textView2 = (TextView) findViewById(R.id.textView2);
         textView3 = (TextView) findViewById(R.id.textView3);
         textView4 = (TextView) findViewById(R.id.textView4);
@@ -337,20 +351,29 @@ public class MainActivity extends AppCompatActivity {
             textView2.setText(champData.get(statsList.get(0).champKey));
         }
         catch (Exception e){e.printStackTrace();}
-        textView3.setText(statsList.get(0).kills+"/"+statsList.get(0).deaths+"/"+statsList.get(0).assists);
+        textView3.setText(statsList.get(0).kills+"/"+statsList.get(0).deaths+"/"+statsList.get(0).assists+"\n");
         if(statsList.get(0).win.equals("false")){
-            textView5.setText("LOSS\n");
+            textView3.append("DEFEAT");
+            textView3.setTextColor(Color.parseColor("#f4426b"));
         }
         else if(statsList.get(0).win.equals("true")){
-            textView5.setText("WIN\n");
+            textView3.append("VICTORY");
+            textView3.setTextColor(Color.parseColor("#2dff65"));
         }
         else
-            textView5.setText("DRAW\n");
-        textView5.append("Total Damage Dealt to Champions : "+statsList.get(0).totalDamageDealtToChampions+"\n");
+            textView3.append("DRAW");
+        textView5.setText("Total Damage Dealt to Champions : "+statsList.get(0).totalDamageDealtToChampions+"\n");
         textView5.append("Total Gold Earned : "+statsList.get(0).goldEarned+"\n");
         textView5.append("CS : "+statsList.get(0).totalMinionsKilled+"\n");
         textView5.append("Largest Killing Spree : "+statsList.get(0).largestKillingSpree+"\n");
         textView5.append("Largest Multi Kill : "+statsList.get(0).largestMultiKill+"\n");
+        barEntries.add(new BarEntry(Float.valueOf(statsList.get(0).totalDamageDealtToChampions),0));
+        xAxis.add(champData.get(statsList.get(0).champKey));
+        BarDataSet barDataSet = new BarDataSet(barEntries,"ttt");
+        BarData theData = new BarData(xAxis,barDataSet);
+        barChart.setData(theData);
+        barChart.setDoubleTapToZoomEnabled(false);
+        barChart.invalidate();
         progress.dismiss();
     }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -405,16 +428,18 @@ public class MainActivity extends AppCompatActivity {
             textView2.setText(champData.get(statsList.get(pageNum).champKey));
         }
         catch (Exception e){e.printStackTrace();}
-        textView3.setText(statsList.get(pageNum).kills+"/"+statsList.get(pageNum).deaths+"/"+statsList.get(pageNum).assists);
+        textView3.setText(statsList.get(pageNum).kills+"/"+statsList.get(pageNum).deaths+"/"+statsList.get(pageNum).assists+"\n");
         if(statsList.get(pageNum).win.equals("false")){
-            textView5.setText("LOSS\n");
+            textView3.append("DEFEAT\n");
+            textView3.setTextColor(Color.parseColor("#f4426b"));
         }
         else if(statsList.get(pageNum).win.equals("true")){
-            textView5.setText("WIN\n");
+            textView3.append("VICTORY\n");
+            textView3.setTextColor(Color.parseColor("#2dff65"));
         }
         else
-            textView5.setText("DRAW\n");
-        textView5.append("Total Damage Dealt to Champions : "+statsList.get(pageNum).totalDamageDealtToChampions+"\n");
+            textView3.append("DRAW\n");
+        textView5.setText("Total Damage Dealt to Champions : "+statsList.get(pageNum).totalDamageDealtToChampions+"\n");
         textView5.append("Total Gold Earned : "+statsList.get(pageNum).goldEarned+"\n");
         textView5.append("CS : "+statsList.get(pageNum).totalMinionsKilled+"\n");
         textView5.append("Largest Killing Spree : "+statsList.get(pageNum).largestKillingSpree+"\n");
