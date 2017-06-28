@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.JsonReader;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,9 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -49,6 +54,10 @@ import okhttp3.Response;
 import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity {
+    private static String TAG = "MainActivity";
+    private float[] yData = {25.3f, 10.6f, 66.76f, 44.32f, 46.01f, 16.89f, 23.9f};
+    private String[] xData = {"Mitch", "Jessica" , "Mohammad" , "Kelsey", "Sam", "Robert", "Ashley"};
+    PieChart pieChart;
     BarChart barChart;
     private TextView textView2;
     private TextView textView3;
@@ -76,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        barChart = (BarChart) findViewById(R.id.dmgGraph);
+
+        pieChart = (PieChart) findViewById(R.id.PieChart);
         barEntries = new ArrayList<>();
         BarDataSet barDataSet = new BarDataSet(barEntries,"");
         xAxis = new ArrayList<>();
@@ -274,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject json = new JSONObject(result);
                 JSONArray jsonArray = json.getJSONArray("participantIdentities");
                 String parId="";
+                boolean firstHalf;
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject match = jsonArray.getJSONObject(i);
                     JSONObject newsummoner = (JSONObject) match.get("player");
@@ -283,12 +294,17 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
+                if(Integer.valueOf(parId) <= 5){
+                    firstHalf=true;
+                }
+                else {firstHalf = false;}
                 JSONArray jsonArray2 = json.getJSONArray("participants");
+                Stats newStats = new Stats();
                 for (int i = 0; i < jsonArray2.length(); i++) {
                     JSONObject match = jsonArray2.getJSONObject(i);
+                    JSONObject temp = new JSONObject(match.getString("stats"));
                     if (match.getString("participantId").equals(parId)){
-                        JSONObject temp = new JSONObject(match.getString("stats"));
-                        Stats newStats = new Stats();
+
                         newStats.win = temp.getString("win");
                         newStats.largestCriticalStrike = temp.getString("largestCriticalStrike");
                         newStats.totalDamageDealt = temp.getString("totalDamageDealt");
@@ -308,10 +324,24 @@ public class MainActivity extends AppCompatActivity {
                         newStats.items[3]=temp.getString("item3");
                         newStats.items[4]=temp.getString("item4");
                         newStats.items[5]=temp.getString("item5");
-                        statsList.add(pageNum,newStats);
-                        break;
+                        newStats.totalDamage += Integer.valueOf(temp.getString("totalDamageDealtToChampions"));
+
                     }
+                    if(firstHalf){
+                        if(i<=4){
+                            newStats.totalDamage += Integer.valueOf(temp.getString("totalDamageDealtToChampions"));
+                        }
+
+                    }
+                    else{
+                        if(i>=5){
+                            newStats.totalDamage += Integer.valueOf(temp.getString("totalDamageDealtToChampions"));
+                        }
+                    }
+
+
                 }
+                statsList.add(pageNum,newStats);
 
 
             } catch (Exception e) {
@@ -367,13 +397,8 @@ public class MainActivity extends AppCompatActivity {
         textView5.append("CS : "+statsList.get(0).totalMinionsKilled+"\n");
         textView5.append("Largest Killing Spree : "+statsList.get(0).largestKillingSpree+"\n");
         textView5.append("Largest Multi Kill : "+statsList.get(0).largestMultiKill+"\n");
-        barEntries.add(new BarEntry(Float.valueOf(statsList.get(0).totalDamageDealtToChampions),0));
-        xAxis.add(champData.get(statsList.get(0).champKey));
-        BarDataSet barDataSet = new BarDataSet(barEntries,"ttt");
-        BarData theData = new BarData(xAxis,barDataSet);
-        barChart.setData(theData);
-        barChart.setDoubleTapToZoomEnabled(false);
-        barChart.invalidate();
+        int j =0;
+        addChartData(pieChart,statsList.get(0));
         progress.dismiss();
     }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -447,6 +472,19 @@ public class MainActivity extends AppCompatActivity {
         progress.dismiss();
     }
 
-
+    private void addChartData(PieChart chart, Stats stats){
+        ArrayList<PieEntry> yEntries = new ArrayList<>();
+        ArrayList<String> xEntries = new ArrayList<>();
+        Float tempNum = (Float.valueOf(stats.totalDamageDealtToChampions)/Float.valueOf(stats.totalDamage))*100;
+        yEntries.add(new PieEntry(100-tempNum));
+        xEntries.add("team");
+        yEntries.add(new PieEntry(Float.valueOf(tempNum)));
+        xEntries.add("me");
+        PieDataSet pieDataSet = new PieDataSet(yEntries,"testGraph");
+        pieDataSet.setValueTextSize(16f);
+        PieData pieData = new PieData(pieDataSet);
+        pieChart.setData(pieData);
+        pieChart.invalidate();
+    }
 
 }

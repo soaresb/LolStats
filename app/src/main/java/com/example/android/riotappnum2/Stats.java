@@ -1,5 +1,6 @@
 package com.example.android.riotappnum2;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,11 +22,13 @@ public class Stats {
     public String totalDamageDealtToChampions;
     public String champKey;
     public String[] items;
+    public int totalDamage;
     //after this go into timeline object and show those for extra data
 
     public Stats()
     {
         items = new String[7];
+        //dmgMap = new HashMap<String, String>();
     }
 
 }
