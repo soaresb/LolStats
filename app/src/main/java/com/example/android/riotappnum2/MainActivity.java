@@ -189,10 +189,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 catch(Exception e){e.printStackTrace();}
             }
-            }
+        }
 
 
-         catch (Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -241,9 +241,9 @@ public class MainActivity extends AppCompatActivity {
                     {}
                     else {summoner.gameIds.add(temp);}
                 }
-            int tempp = summoner.gameIds.size();
-            GetMatchData getMatchData = new GetMatchData();
-            getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(0) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+                int tempp = summoner.gameIds.size();
+                GetMatchData getMatchData = new GetMatchData();
+                getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(0) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
 
             }
             catch (Exception e) {e.printStackTrace();}
