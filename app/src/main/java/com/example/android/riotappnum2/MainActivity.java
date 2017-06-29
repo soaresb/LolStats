@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         pieChart = (PieChart) findViewById(R.id.PieChart);
+        pieChart.setTouchEnabled(false);
         barEntries = new ArrayList<>();
         BarDataSet barDataSet = new BarDataSet(barEntries,"");
         xAxis = new ArrayList<>();
@@ -478,11 +479,15 @@ public class MainActivity extends AppCompatActivity {
         Float tempNum = (Float.valueOf(stats.totalDamageDealtToChampions)/Float.valueOf(stats.totalDamage))*100;
         yEntries.add(new PieEntry(100-tempNum));
         xEntries.add("team");
-        yEntries.add(new PieEntry(Float.valueOf(tempNum)));
+        yEntries.add(new PieEntry(Float.valueOf(tempNum),String.format("%.2f", Float.valueOf(tempNum))+"%"));
         xEntries.add("me");
         PieDataSet pieDataSet = new PieDataSet(yEntries,"testGraph");
         pieDataSet.setValueTextSize(16f);
+        pieDataSet.setDrawValues(false);
+
+        pieDataSet.setColors(new int[] {Color.GRAY, Color.RED});
         PieData pieData = new PieData(pieDataSet);
+        //pieData.
         pieChart.setData(pieData);
         pieChart.invalidate();
     }
