@@ -376,6 +376,8 @@ public class MainActivity extends AppCompatActivity {
                 .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(0).items[4]+".png");
         new DownloadImageTask((ImageView) findViewById(R.id.item6))
                 .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(0).items[5]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.goldPic))
+                .execute("http://ddragon.leagueoflegends.com/cdn/5.5.1/img/ui/gold.png");
 //                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/1001.png");
         //int temp = Integer.parseInt(statsList.get(0).champKey);
         try {
@@ -395,6 +397,7 @@ public class MainActivity extends AppCompatActivity {
             textView3.append("DRAW");
         textView5.setText("Total Damage Dealt to Champions : "+statsList.get(0).totalDamageDealtToChampions+"\n");
         textView5.append("Total Gold Earned : "+statsList.get(0).goldEarned+"\n");
+        textView4.setText("Total Gold Earned : "+statsList.get(0).goldEarned+"\n");
         textView5.append("CS : "+statsList.get(0).totalMinionsKilled+"\n");
         textView5.append("Largest Killing Spree : "+statsList.get(0).largestKillingSpree+"\n");
         textView5.append("Largest Multi Kill : "+statsList.get(0).largestMultiKill+"\n");
@@ -467,6 +470,7 @@ public class MainActivity extends AppCompatActivity {
             textView3.append("DRAW\n");
         textView5.setText("Total Damage Dealt to Champions : "+statsList.get(pageNum).totalDamageDealtToChampions+"\n");
         textView5.append("Total Gold Earned : "+statsList.get(pageNum).goldEarned+"\n");
+        textView4.setText("Total Gold Earned : "+statsList.get(pageNum).goldEarned+"\n");
         textView5.append("CS : "+statsList.get(pageNum).totalMinionsKilled+"\n");
         textView5.append("Largest Killing Spree : "+statsList.get(pageNum).largestKillingSpree+"\n");
         textView5.append("Largest Multi Kill : "+statsList.get(pageNum).largestMultiKill+"\n");
@@ -489,6 +493,8 @@ public class MainActivity extends AppCompatActivity {
         PieData pieData = new PieData(pieDataSet);
         //pieData.
         pieChart.setData(pieData);
+        pieChart.setDrawCenterText(true);
+        pieChart.setCenterText(String.format("%.2f", (Float.valueOf(stats.totalDamageDealtToChampions))/1000)+"k");
         pieChart.invalidate();
     }
 
