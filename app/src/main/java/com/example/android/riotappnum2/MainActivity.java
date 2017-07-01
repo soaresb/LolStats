@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView textView3;
     private TextView textView4;
     private TextView textView5;
+    private TextView csScore;
+    private ImageView minion;
     private ImageView imageView;
     private ImageView item0;
     private ImageView item2;
@@ -98,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
         textView3 = (TextView) findViewById(R.id.textView3);
         textView4 = (TextView) findViewById(R.id.textView4);
         textView5 = (TextView) findViewById(R.id.textView5);
+        csScore = (TextView) findViewById(R.id.csScore);
+        minion = (ImageView) findViewById(R.id.minion);
         item0 = (ImageView) findViewById(R.id.item0);
         item2 = (ImageView) findViewById(R.id.item2);
         item3 = (ImageView) findViewById(R.id.item3);
@@ -378,6 +382,8 @@ public class MainActivity extends AppCompatActivity {
                 .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+statsList.get(0).items[5]+".png");
         new DownloadImageTask((ImageView) findViewById(R.id.goldPic))
                 .execute("http://ddragon.leagueoflegends.com/cdn/5.5.1/img/ui/gold.png");
+        new DownloadImageTask((ImageView) findViewById(R.id.minion))
+                .execute("http://ddragon.leagueoflegends.com/cdn/5.5.1/img/ui/minion.png");
 //                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/1001.png");
         //int temp = Integer.parseInt(statsList.get(0).champKey);
         try {
@@ -396,9 +402,10 @@ public class MainActivity extends AppCompatActivity {
         else
             textView3.append("DRAW");
         textView5.setText("Total Damage Dealt to Champions : "+statsList.get(0).totalDamageDealtToChampions+"\n");
+        String goldK = String.format("%.1f",Float.parseFloat(statsList.get(0).goldEarned) / 1000);
         textView5.append("Total Gold Earned : "+statsList.get(0).goldEarned+"\n");
-        textView4.setText("Total Gold Earned : "+statsList.get(0).goldEarned+"\n");
-        textView5.append("CS : "+statsList.get(0).totalMinionsKilled+"\n");
+        textView4.setText("Total Gold Earned : "+goldK+" k");
+        csScore.setText("CS : "+statsList.get(0).totalMinionsKilled);
         textView5.append("Largest Killing Spree : "+statsList.get(0).largestKillingSpree+"\n");
         textView5.append("Largest Multi Kill : "+statsList.get(0).largestMultiKill+"\n");
         int j =0;
@@ -470,7 +477,8 @@ public class MainActivity extends AppCompatActivity {
             textView3.append("DRAW\n");
         textView5.setText("Total Damage Dealt to Champions : "+statsList.get(pageNum).totalDamageDealtToChampions+"\n");
         textView5.append("Total Gold Earned : "+statsList.get(pageNum).goldEarned+"\n");
-        textView4.setText("Total Gold Earned : "+statsList.get(pageNum).goldEarned+"\n");
+        String goldK = String.format("%.1f",Float.parseFloat(statsList.get(pageNum).goldEarned) / 1000);
+        textView4.setText("Total Gold Earned : "+goldK+" k");
         textView5.append("CS : "+statsList.get(pageNum).totalMinionsKilled+"\n");
         textView5.append("Largest Killing Spree : "+statsList.get(pageNum).largestKillingSpree+"\n");
         textView5.append("Largest Multi Kill : "+statsList.get(pageNum).largestMultiKill+"\n");
