@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView csScore;
     private ImageView minion;
     private ImageView imageView;
+    private TextView kdText;
     private ImageView item0;
     private ImageView item2;
     private ImageView item3;
@@ -82,12 +83,14 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog progress;
     ArrayList<BarEntry> barEntries;
     ArrayList<String> xAxis;
+    View v;
     ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        v = this.getWindow().getDecorView().findViewById(android.R.id.content);
+        v.setVisibility(View.INVISIBLE);
         pieChart = (PieChart) findViewById(R.id.PieChart);
         pieChart.setTouchEnabled(false);
         barEntries = new ArrayList<>();
@@ -109,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         item5 = (ImageView) findViewById(R.id.item5);
         item6 = (ImageView) findViewById(R.id.item6);
         imageView = (ImageView) findViewById(R.id.imageView);
+        kdText = (TextView) findViewById(R.id.kdText);
 //        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 //        progressBar.setVisibility(View.GONE);
         try {
@@ -390,27 +394,30 @@ public class MainActivity extends AppCompatActivity {
             textView2.setText(champData.get(statsList.get(0).champKey));
         }
         catch (Exception e){e.printStackTrace();}
-        textView3.setText(statsList.get(0).kills+"/"+statsList.get(0).deaths+"/"+statsList.get(0).assists+"\n");
+
         if(statsList.get(0).win.equals("false")){
-            textView3.append("DEFEAT");
+            textView3.setText("DEFEAT");
             textView3.setTextColor(Color.parseColor("#f4426b"));
         }
         else if(statsList.get(0).win.equals("true")){
-            textView3.append("VICTORY");
+            textView3.setText("VICTORY");
             textView3.setTextColor(Color.parseColor("#2dff65"));
         }
         else
-            textView3.append("DRAW");
-        textView5.setText("Total Damage Dealt to Champions : "+statsList.get(0).totalDamageDealtToChampions+"\n");
+            textView3.setText("DRAW");
+        kdText.setText(statsList.get(0).kills+"/"+statsList.get(0).deaths+"/"+statsList.get(0).assists+"\n");
+        kdText.append(String.format("%.2f",(Float.parseFloat(statsList.get(0).kills)+Float.parseFloat(statsList.get(0).assists))/Float.parseFloat(statsList.get(0).deaths))+" KDA");
+        //textView5.setText("Total Damage Dealt to Champions : "+statsList.get(0).totalDamageDealtToChampions+"\n");
         String goldK = String.format("%.1f",Float.parseFloat(statsList.get(0).goldEarned) / 1000);
-        textView5.append("Total Gold Earned : "+statsList.get(0).goldEarned+"\n");
+        //textView5.append("Total Gold Earned : "+statsList.get(0).goldEarned+"\n");
         textView4.setText("Total Gold Earned : "+goldK+" k");
         csScore.setText("CS : "+statsList.get(0).totalMinionsKilled);
-        textView5.append("Largest Killing Spree : "+statsList.get(0).largestKillingSpree+"\n");
-        textView5.append("Largest Multi Kill : "+statsList.get(0).largestMultiKill+"\n");
+        //textView5.append("Largest Killing Spree : "+statsList.get(0).largestKillingSpree+"\n");
+        //textView5.append("Largest Multi Kill : "+statsList.get(0).largestMultiKill+"\n");
         int j =0;
         addChartData(pieChart,statsList.get(0));
         progress.dismiss();
+        v.setVisibility(View.VISIBLE);
     }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
@@ -464,24 +471,26 @@ public class MainActivity extends AppCompatActivity {
             textView2.setText(champData.get(statsList.get(pageNum).champKey));
         }
         catch (Exception e){e.printStackTrace();}
-        textView3.setText(statsList.get(pageNum).kills+"/"+statsList.get(pageNum).deaths+"/"+statsList.get(pageNum).assists+"\n");
+
         if(statsList.get(pageNum).win.equals("false")){
-            textView3.append("DEFEAT\n");
+            textView3.setText("DEFEAT");
             textView3.setTextColor(Color.parseColor("#f4426b"));
         }
         else if(statsList.get(pageNum).win.equals("true")){
-            textView3.append("VICTORY\n");
+            textView3.setText("VICTORY");
             textView3.setTextColor(Color.parseColor("#2dff65"));
         }
         else
-            textView3.append("DRAW\n");
-        textView5.setText("Total Damage Dealt to Champions : "+statsList.get(pageNum).totalDamageDealtToChampions+"\n");
-        textView5.append("Total Gold Earned : "+statsList.get(pageNum).goldEarned+"\n");
+            textView3.setText("DRAW");
+        kdText.setText(statsList.get(pageNum).kills+"/"+statsList.get(pageNum).deaths+"/"+statsList.get(pageNum).assists+"\n");
+        kdText.append(String.format("%.2f",(Float.parseFloat(statsList.get(pageNum).kills)+Float.parseFloat(statsList.get(pageNum).assists))/Float.parseFloat(statsList.get(pageNum).deaths))+" KDA");
+        //textView5.setText("Total Damage Dealt to Champions : "+statsList.get(pageNum).totalDamageDealtToChampions+"\n");
+        //textView5.append("Total Gold Earned : "+statsList.get(pageNum).goldEarned+"\n");
         String goldK = String.format("%.1f",Float.parseFloat(statsList.get(pageNum).goldEarned) / 1000);
         textView4.setText("Total Gold Earned : "+goldK+" k");
-        textView5.append("CS : "+statsList.get(pageNum).totalMinionsKilled+"\n");
-        textView5.append("Largest Killing Spree : "+statsList.get(pageNum).largestKillingSpree+"\n");
-        textView5.append("Largest Multi Kill : "+statsList.get(pageNum).largestMultiKill+"\n");
+        csScore.setText("CS : "+statsList.get(pageNum).totalMinionsKilled);
+        //textView5.append("Largest Killing Spree : "+statsList.get(pageNum).largestKillingSpree+"\n");
+        //textView5.append("Largest Multi Kill : "+statsList.get(pageNum).largestMultiKill+"\n");
         progress.dismiss();
     }
 
@@ -491,18 +500,21 @@ public class MainActivity extends AppCompatActivity {
         Float tempNum = (Float.valueOf(stats.totalDamageDealtToChampions)/Float.valueOf(stats.totalDamage))*100;
         yEntries.add(new PieEntry(100-tempNum));
         xEntries.add("team");
-        yEntries.add(new PieEntry(Float.valueOf(tempNum),String.format("%.2f", Float.valueOf(tempNum))+"%"));
+        yEntries.add(new PieEntry(Float.valueOf(tempNum)));
         xEntries.add("me");
         PieDataSet pieDataSet = new PieDataSet(yEntries,"testGraph");
         pieDataSet.setValueTextSize(16f);
         pieDataSet.setDrawValues(false);
-
         pieDataSet.setColors(new int[] {Color.GRAY, Color.RED});
         PieData pieData = new PieData(pieDataSet);
-        //pieData.
         pieChart.setData(pieData);
         pieChart.setDrawCenterText(true);
-        pieChart.setCenterText(String.format("%.2f", (Float.valueOf(stats.totalDamageDealtToChampions))/1000)+"k");
+        pieChart.setEntryLabelColor(Color.BLACK);
+        pieChart.setEntryLabelTextSize(11);
+        pieChart.getLegend().setEnabled(false);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setUsePercentValues(true);
+        pieChart.setCenterText(String.format("%.1f", (Float.valueOf(stats.totalDamageDealtToChampions))/1000)+"k");
         pieChart.invalidate();
     }
 
