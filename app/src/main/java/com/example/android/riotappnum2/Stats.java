@@ -8,6 +8,7 @@ import java.util.List;
  */
 
 public class Stats {
+    public String summonerName;
     public String win;
     public String largestCriticalStrike;
     public String totalDamageDealt;

@@ -14,9 +14,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,16 +65,20 @@ public class MainActivity extends AppCompatActivity {
     private TextView textView3;
     private TextView textView4;
     private TextView textView5;
+    ProgressDialog progress2;
     private TextView csScore;
     private ImageView minion;
     private ImageView imageView;
     private TextView kdText;
+    private TableLayout statsTable;
+    private Button matchDataButton;
     private ImageView item0;
     private ImageView item2;
     private ImageView item3;
     private ImageView item4;
     private ImageView item5;
     private ImageView item6;
+    public ArrayList<Match> fullMatch;
     public Summoner summoner;
     public List<Stats> statsList;
     public String currentPage;
@@ -113,16 +119,18 @@ public class MainActivity extends AppCompatActivity {
         item6 = (ImageView) findViewById(R.id.item6);
         imageView = (ImageView) findViewById(R.id.imageView);
         kdText = (TextView) findViewById(R.id.kdText);
+        matchDataButton = (Button) findViewById(R.id.matchDataButton);
+        statsTable = (TableLayout) findViewById(R.id.statsTable);
+        statsTable.setVisibility(View.INVISIBLE);
 //        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 //        progressBar.setVisibility(View.GONE);
-        try {
-            URL url = new URL("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/Aatrox.png");
-            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            imageView.setImageBitmap(bmp);
-        }
-        catch (Exception e){e.printStackTrace();}
 
         champData = new HashMap<String, String>();
+        fullMatch = new ArrayList<Match>(20);
+        for(int k=0;k<20;k++){
+            Match temp = new Match("1");
+            fullMatch.add(temp);
+        }
         String s = getIntent().getStringExtra("ACCOUNTID");
         String ss = getIntent().getStringExtra("ID");
         summoner = new Summoner(ss);
@@ -146,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
                     dropDown=true;
                 }
                 else{
+                    statsTable.setVisibility(View.INVISIBLE);
                     GetMatchData getMatchData = new GetMatchData();
                     try{
                         getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});}
@@ -194,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     String key = keys.next();
                     JSONObject value = (JSONObject) ex.get(key);
-                    champData.put(key,value.getString("name"));
+                    champData.put(key,value.getString("key"));
                 }
                 catch(Exception e){e.printStackTrace();}
             }
@@ -313,7 +322,6 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject match = jsonArray2.getJSONObject(i);
                     JSONObject temp = new JSONObject(match.getString("stats"));
                     if (match.getString("participantId").equals(parId)){
-
                         newStats.win = temp.getString("win");
                         newStats.largestCriticalStrike = temp.getString("largestCriticalStrike");
                         newStats.totalDamageDealt = temp.getString("totalDamageDealt");
@@ -427,7 +435,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
+            String urldisplay = urls[0].replaceAll("\\s+", "");
             Bitmap mIcon11 = null;
             try {
                 InputStream in = new java.net.URL(urldisplay).openStream();
@@ -445,7 +453,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick() {
-        //progressBar.setVisibility(View.VISIBLE);
+        progress.show();
+        v.setVisibility(View.INVISIBLE);
         try {
             Thread.sleep(100);
             //progressBar.setVisibility(View.GONE);
@@ -491,7 +500,9 @@ public class MainActivity extends AppCompatActivity {
         csScore.setText("CS : "+statsList.get(pageNum).totalMinionsKilled);
         //textView5.append("Largest Killing Spree : "+statsList.get(pageNum).largestKillingSpree+"\n");
         //textView5.append("Largest Multi Kill : "+statsList.get(pageNum).largestMultiKill+"\n");
+        addChartData(pieChart,statsList.get(pageNum));
         progress.dismiss();
+        v.setVisibility(View.VISIBLE);
     }
 
     private void addChartData(PieChart chart, Stats stats){
@@ -516,6 +527,175 @@ public class MainActivity extends AppCompatActivity {
         pieChart.setUsePercentValues(true);
         pieChart.setCenterText(String.format("%.1f", (Float.valueOf(stats.totalDamageDealtToChampions))/1000)+"k");
         pieChart.invalidate();
+
+    }
+
+    private class GetFullMatchData extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            // we use the OkHttp library from https://github.com/square/okhttp
+            OkHttpClient client = new OkHttpClient();
+            Request request =
+                    new Request.Builder()
+                            .url(urls[0])
+                            .build();
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    return response.body().string();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            return null;
+        }
+
+        protected void onPostExecute(String result) {
+            Match thisMatch;
+            try {
+                JSONObject json = new JSONObject(result);
+                thisMatch = new Match(json.getString("gameId"));
+                JSONArray jsonArray = json.getJSONArray("participantIdentities");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject matchDetails = jsonArray.getJSONObject(i);
+                    JSONObject newsummoner = (JSONObject) matchDetails.get("player");
+                    Stats newSummonerStats = new Stats();
+                    newSummonerStats.summonerName = newsummoner.getString("summonerName");
+                    thisMatch.fullMatchData.add(newSummonerStats);
+                }
+                JSONArray jsonArray2 = json.getJSONArray("participants");
+                //Stats newStats = new Stats();
+                for (int i = 0; i < jsonArray2.length(); i++) {
+                    JSONObject match = jsonArray2.getJSONObject(i);
+                    JSONObject temp = new JSONObject(match.getString("stats"));
+                    Stats newStats = thisMatch.fullMatchData.get(i);
+                    newStats.deaths = temp.getString("deaths");
+                    newStats.kills = temp.getString("kills");
+                    newStats.assists = temp.getString("assists");
+                    newStats.totalMinionsKilled = temp.getString("totalMinionsKilled");
+                    newStats.totalDamageDealtToChampions = temp.getString("totalDamageDealtToChampions");
+                    newStats.champKey = match.getString("championId");
+                    newStats.items[0]=temp.getString("item0");
+                    newStats.items[1]=temp.getString("item1");
+                    newStats.items[2]=temp.getString("item2");
+                    newStats.items[3]=temp.getString("item3");
+                    newStats.items[4]=temp.getString("item4");
+                    newStats.items[5]=temp.getString("item5");
+                }
+                fullMatch.add(pageNum,thisMatch);
+//                View table = statsTable;
+//                TextView text = (TextView) table.findViewById(R.id.row1Champ);
+//                text.setText(fullMatchData.get(0).fullMatchData.get(0).champKey);
+            }
+            catch (Exception e ){e.printStackTrace();}
+            progress2.dismiss();
+            updateTable();
+
+
+
+        }
+    }
+
+    public void OnClickMatchData(View view){
+        progress2 = new ProgressDialog(this);
+        progress2.setTitle("Loading");
+        progress2.setMessage("Wait while loading...");
+        progress2.setCancelable(false); // disable dismiss by tapping outside of the dialog
+        progress2.show();
+        GetFullMatchData getFullMatchData = new GetFullMatchData();
+        try{
+            getFullMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});}
+        catch (Exception e){e.printStackTrace();}
+    }
+
+
+    private void updateTable(){
+        View table = statsTable;
+        TextView summoner1 = (TextView) table.findViewById(R.id.row1champ1);
+        TextView summoner6 = (TextView) table.findViewById(R.id.row1champ6);
+        TextView summoner1kda = (TextView) table.findViewById(R.id.row1champ1kda);
+        TextView summoner6kda = (TextView) table.findViewById(R.id.row1champ6kda);
+        summoner1kda.setText(fullMatch.get(pageNum).fullMatchData.get(0).kills+"/"+fullMatch.get(pageNum).fullMatchData.get(0).deaths+"/"+fullMatch.get(pageNum).fullMatchData.get(0).assists+"\n");
+        summoner6kda.setText(fullMatch.get(pageNum).fullMatchData.get(5).kills+"/"+fullMatch.get(pageNum).fullMatchData.get(5).deaths+"/"+fullMatch.get(pageNum).fullMatchData.get(5).assists+"\n");
+        new DownloadImageTask((ImageView) table.findViewById(R.id.row1champ1pic))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+(champData.get(fullMatch.get(pageNum).fullMatchData.get(0).champKey)).replaceAll("\\s+","")+".png");
+        new DownloadImageTask((ImageView) table.findViewById(R.id.row1champ6pic))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+(champData.get(fullMatch.get(pageNum).fullMatchData.get(5).champKey)).replaceAll("\\s+","")+".png");
+        summoner1.setText(fullMatch.get(pageNum).fullMatchData.get(0).summonerName);
+        summoner6.setText(fullMatch.get(pageNum).fullMatchData.get(5).summonerName);
+
+        ////////////////////////////////////////////////////////////////////////
+        TextView summoner2 = (TextView) table.findViewById(R.id.row2champ2);
+        TextView summoner7 = (TextView) table.findViewById(R.id.row2champ7);
+        TextView summoner2kda = (TextView) table.findViewById(R.id.row2champ2kda);
+        TextView summoner7kda = (TextView) table.findViewById(R.id.row2champ7kda);
+        summoner2kda.setText(fullMatch.get(pageNum).fullMatchData.get(1).kills+"/"+fullMatch.get(pageNum).fullMatchData.get(1).deaths+"/"+fullMatch.get(pageNum).fullMatchData.get(1).assists+"\n");
+        summoner7kda.setText(fullMatch.get(pageNum).fullMatchData.get(6).kills+"/"+fullMatch.get(pageNum).fullMatchData.get(6).deaths+"/"+fullMatch.get(pageNum).fullMatchData.get(6).assists+"\n");
+        new DownloadImageTask((ImageView) table.findViewById(R.id.row2champ2pic))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+(champData.get(fullMatch.get(pageNum).fullMatchData.get(1).champKey)).replaceAll("\\s+","")+".png");
+        new DownloadImageTask((ImageView) table.findViewById(R.id.row2champ7pic))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+(champData.get(fullMatch.get(pageNum).fullMatchData.get(6).champKey)).replaceAll("\\s+","")+".png");
+        summoner2.setText(fullMatch.get(pageNum).fullMatchData.get(1).summonerName);
+        summoner7.setText(fullMatch.get(pageNum).fullMatchData.get(6).summonerName);
+
+        ////////////////////////////////////////////////////////////////////////
+        TextView summoner3 = (TextView) table.findViewById(R.id.row3champ3);
+        TextView summoner8 = (TextView) table.findViewById(R.id.row3champ8);
+        TextView summoner3kda = (TextView) table.findViewById(R.id.row3champ3kda);
+        TextView summoner8kda = (TextView) table.findViewById(R.id.row3champ8kda);
+        summoner3kda.setText(fullMatch.get(pageNum).fullMatchData.get(2).kills+"/"+fullMatch.get(pageNum).fullMatchData.get(2).deaths+"/"+fullMatch.get(pageNum).fullMatchData.get(2).assists+"\n");
+        summoner8kda.setText(fullMatch.get(pageNum).fullMatchData.get(7).kills+"/"+fullMatch.get(pageNum).fullMatchData.get(7).deaths+"/"+fullMatch.get(pageNum).fullMatchData.get(7).assists+"\n");
+        new DownloadImageTask((ImageView) table.findViewById(R.id.row3champ3pic))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+(champData.get(fullMatch.get(pageNum).fullMatchData.get(2).champKey)).replaceAll("\\s+","")+".png");
+        new DownloadImageTask((ImageView) table.findViewById(R.id.row3champ8pic))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+(champData.get(fullMatch.get(pageNum).fullMatchData.get(7).champKey)).replaceAll("\\s+","")+".png");
+        summoner3.setText(fullMatch.get(pageNum).fullMatchData.get(2).summonerName);
+        summoner8.setText(fullMatch.get(pageNum).fullMatchData.get(7).summonerName);
+
+        ////////////////////////////////////////////////////////////////////////
+        TextView summoner4 = (TextView) table.findViewById(R.id.row4champ4);
+        TextView summoner9 = (TextView) table.findViewById(R.id.row4champ9);
+        TextView summoner4kda = (TextView) table.findViewById(R.id.row4champ4kda);
+        TextView summoner9kda = (TextView) table.findViewById(R.id.row4champ9kda);
+        summoner4kda.setText(fullMatch.get(pageNum).fullMatchData.get(3).kills+"/"+fullMatch.get(pageNum).fullMatchData.get(3).deaths+"/"+fullMatch.get(pageNum).fullMatchData.get(3).assists+"\n");
+        summoner9kda.setText(fullMatch.get(pageNum).fullMatchData.get(8).kills+"/"+fullMatch.get(pageNum).fullMatchData.get(8).deaths+"/"+fullMatch.get(pageNum).fullMatchData.get(8).assists+"\n");
+        new DownloadImageTask((ImageView) table.findViewById(R.id.row4champ4pic))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+(champData.get(fullMatch.get(pageNum).fullMatchData.get(3).champKey)).replaceAll("\\s+","")+".png");
+        new DownloadImageTask((ImageView) table.findViewById(R.id.row4champ9pic))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+(champData.get(fullMatch.get(pageNum).fullMatchData.get(8).champKey)).replaceAll("\\s+","")+".png");
+        summoner4.setText(fullMatch.get(pageNum).fullMatchData.get(3).summonerName);
+        summoner9.setText(fullMatch.get(pageNum).fullMatchData.get(8).summonerName);
+
+        ////////////////////////////////////////////////////////////////////////
+        TextView summoner5 = (TextView) table.findViewById(R.id.row5champ5);
+        TextView summoner10 = (TextView) table.findViewById(R.id.row5champ10);
+        TextView summoner5kda = (TextView) table.findViewById(R.id.row5champ5kda);
+        TextView summoner10kda = (TextView) table.findViewById(R.id.row5champ10kda);
+        summoner5kda.setText(fullMatch.get(pageNum).fullMatchData.get(4).kills+"/"+fullMatch.get(pageNum).fullMatchData.get(4).deaths+"/"+fullMatch.get(pageNum).fullMatchData.get(4).assists+"\n");
+        summoner10kda.setText(fullMatch.get(pageNum).fullMatchData.get(9).kills+"/"+fullMatch.get(pageNum).fullMatchData.get(9).deaths+"/"+fullMatch.get(pageNum).fullMatchData.get(9).assists+"\n");
+        new DownloadImageTask((ImageView) table.findViewById(R.id.row5champ5pic))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+(champData.get(fullMatch.get(pageNum).fullMatchData.get(4).champKey)).replaceAll("\\s+","")+".png");
+        new DownloadImageTask((ImageView) table.findViewById(R.id.row5champ10pic))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/"+(champData.get(fullMatch.get(pageNum).fullMatchData.get(9).champKey)).replaceAll("\\s+","")+".png");
+        summoner5.setText(fullMatch.get(pageNum).fullMatchData.get(4).summonerName);
+        summoner10.setText(fullMatch.get(pageNum).fullMatchData.get(9).summonerName);
+
+        new DownloadImageTask((ImageView) findViewById(R.id.champ1item1))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+fullMatch.get(pageNum).fullMatchData.get(0).items[0]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.champ1item2))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+fullMatch.get(pageNum).fullMatchData.get(0).items[1]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.champ1item3))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+fullMatch.get(pageNum).fullMatchData.get(0).items[2]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.champ1item4))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+fullMatch.get(pageNum).fullMatchData.get(0).items[3]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.champ1item5))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+fullMatch.get(pageNum).fullMatchData.get(0).items[4]+".png");
+        new DownloadImageTask((ImageView) findViewById(R.id.champ1item6))
+                .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/item/"+fullMatch.get(pageNum).fullMatchData.get(0).items[5]+".png");
+
+        statsTable.setVisibility(View.VISIBLE);
+
     }
 
 }
