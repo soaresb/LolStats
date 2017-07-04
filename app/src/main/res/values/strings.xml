@@ -135,6 +135,9 @@
     <string name='a115'>Ziggs</string>
     <string name='a26'>Zilean</string>
     <string name='a143'>Zyra</string>
+    <string name="gold">Gold</string>
+    <string name="cs">CS</string>
+    <string name="moreData">More Data</string>
     <string-array name="games">
         <item>1</item>
         <item>2</item>
