@@ -23,6 +23,8 @@ public class HomeActivity extends AppCompatActivity {
     private TextView textView;
     public String accountID;
     public String summonerID;
+    public String summonerName;
+    private String apiKey;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +32,7 @@ public class HomeActivity extends AppCompatActivity {
         editText = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button2);
         textView = (TextView) findViewById(R.id.textView) ;
+        apiKey = "RGAPI-692f1023-f257-4f00-b387-09d390ab4237";
         //https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/gladdyy
     }
     public class GetSummonerData extends AsyncTask<String, Void, String> {
@@ -65,9 +68,11 @@ public class HomeActivity extends AppCompatActivity {
                 JSONObject json = new JSONObject(result);
                 accountID = json.getString("accountId");
                 summonerID = json.getString("id");
+                summonerName=json.getString("name");
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 intent.putExtra("ACCOUNTID", accountID);
                 intent.putExtra("ID",summonerID);
+                intent.putExtra("SUMMONERNAME",summonerName);
                 startActivity(intent);
 
             }
@@ -81,7 +86,7 @@ public class HomeActivity extends AppCompatActivity {
     }
     public void OnClick(View view){
         GetSummonerData getSummonerData = new GetSummonerData();
-        getSummonerData.execute(new String[]{"https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/"+editText.getText().toString()+"?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+        getSummonerData.execute(new String[]{"https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/"+editText.getText().toString()+"?api_key="+apiKey});
 
 
     }

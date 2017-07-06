@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     public String currentPage;
     HashMap<String, String> champData;
     public int pageNum;
+    public EditText searchbar;
     public boolean dropDown = false;
     public boolean firstTime = true;
     ProgressDialog progress;
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<BarEntry> barEntries;
     ArrayList<String> xAxis;
     View v;
+    private String apiKey;
     ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         barEntries = new ArrayList<>();
         BarDataSet barDataSet = new BarDataSet(barEntries,"");
         xAxis = new ArrayList<>();
-
+        apiKey = "RGAPI-692f1023-f257-4f00-b387-09d390ab4237";
 //        BarData theData = new BarData(xAxis,barDataSet);
 //        barChart.setData(theData);
         textView2 = (TextView) findViewById(R.id.textView2);
@@ -118,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
         item4 = (ImageView) findViewById(R.id.item4);
         item5 = (ImageView) findViewById(R.id.item5);
         item6 = (ImageView) findViewById(R.id.item6);
+        searchbar = (EditText) findViewById(R.id.searchBar);
+        searchbar.setText(getIntent().getStringExtra("SUMMONERNAME"));
         imageView = (ImageView) findViewById(R.id.imageView);
         kdText = (TextView) findViewById(R.id.kdText);
         matchDataButton = (Button) findViewById(R.id.matchDataButton);
@@ -143,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         }
         loadJSONFromAsset();
         DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/"+s+"/recent?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+        task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/"+s+"/recent?api_key="+apiKey});
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.games,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -165,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     progress3.show();
                     GetMatchData getMatchData = new GetMatchData();
                     try{
-                        getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});}
+                        getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key="+apiKey});}
                     catch (Exception e){e.printStackTrace();}
                 }
             }
@@ -269,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 int tempp = summoner.gameIds.size();
                 GetMatchData getMatchData = new GetMatchData();
-                getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(0) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+                getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(0) + "?api_key="+apiKey});
 
             }
             catch (Exception e) {e.printStackTrace();}
@@ -629,7 +634,7 @@ public class MainActivity extends AppCompatActivity {
             progress2.show();
             GetFullMatchData getFullMatchData = new GetFullMatchData();
             try {
-                getFullMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key=RGAPI-22d59933-21c5-4a66-8896-702a6bcdda25"});
+                getFullMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key="+apiKey});
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -884,6 +889,65 @@ public class MainActivity extends AppCompatActivity {
             statsTable.setVisibility(View.VISIBLE);
         }
         catch (Exception e){e.printStackTrace();}
+
+
+    }
+
+    public class GetSummonerData extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            // we use the OkHttp library from https://github.com/square/okhttp
+            OkHttpClient client = new OkHttpClient();
+            Request request =
+                    new Request.Builder()
+                            .url(urls[0])
+                            .build();
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    return response.body().string();
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+            return null;
+        }
+
+        //"accountId": 50300517,
+        //"id": 35711275,
+        //use the matchv3 to get the 20 most recent matches
+        //gather the match ids for those 20 matches in an array
+        //use those 20 match ids on the api call using a matchid to get stats
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                JSONObject json = new JSONObject(result);
+                String accountID;
+                String summonerID;
+                String summonerName;
+                accountID = json.getString("accountId");
+                summonerID = json.getString("id");
+                summonerName=json.getString("name");
+                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                intent.putExtra("ACCOUNTID", accountID);
+                intent.putExtra("ID",summonerID);
+                intent.putExtra("SUMMONERNAME",summonerName);
+                startActivity(intent);
+
+            }
+            catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Invaild Summoner Name", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+
+            }
+
+        }
+    }
+    public void getStats(View view){
+        GetSummonerData getSummonerData = new GetSummonerData();
+        getSummonerData.execute(new String[]{"https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/"+searchbar.getText().toString()+"?api_key="+apiKey});
 
 
     }

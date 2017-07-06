@@ -12,7 +12,57 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         tools:context="com.example.android.riotappnum2.MainActivity">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/linearLayout2">
+
+            <EditText
+                android:id="@+id/searchBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name" />
+
+            <Button
+                android:id="@+id/searchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:onClick="getStats"
+                android:text="Go" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="0"
+                android:spinnerMode="dropdown"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.973"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textView2"
@@ -20,12 +70,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:text="Test"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
         <TextView
             android:id="@+id/textView3"
@@ -49,25 +99,6 @@
             app:layout_constraintLeft_toRightOf="@+id/goldPic"
             app:layout_constraintTop_toBottomOf="@+id/minion" />
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="38dp"
-            android:layout_height="37dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:spinnerMode="dropdown"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.973"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
         <TextView
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
@@ -86,12 +117,12 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintHorizontal_bias="0.039"
+            app:layout_constraintHorizontal_bias="0.041"
             app:layout_constraintLeft_toRightOf="@+id/textView2"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/ic_launcher_round" />
+            app:srcCompat="@mipmap/ic_launcher_round"
+            android:layout_marginTop="9dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
         <ImageView
             android:id="@+id/item0"
@@ -101,13 +132,13 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:adjustViewBounds="false"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toRightOf="@+id/imageView"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/ic_launcher_round" />
+            app:srcCompat="@mipmap/ic_launcher_round"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
         <ImageView
             android:id="@+id/item2"
@@ -115,10 +146,10 @@
             android:layout_height="32dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             app:layout_constraintLeft_toRightOf="@+id/item0"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/ic_launcher_round" />
+            app:srcCompat="@mipmap/ic_launcher_round"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
         <ImageView
             android:id="@+id/item3"
@@ -126,10 +157,10 @@
             android:layout_height="32dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             app:layout_constraintLeft_toRightOf="@+id/item2"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/ic_launcher_round" />
+            app:srcCompat="@mipmap/ic_launcher_round"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
         <ImageView
             android:id="@+id/item4"
@@ -215,7 +246,7 @@
         <Button
             android:id="@+id/matchDataButton"
             android:layout_width="103dp"
-            android:layout_height="30dp"
+            android:layout_height="48dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="19dp"
@@ -224,7 +255,9 @@
             android:textSize="6sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/goldPic" />
+            app:layout_constraintTop_toBottomOf="@+id/goldPic"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
 
         <LinearLayout
             android:id="@+id/chartLayout"
@@ -235,7 +268,8 @@
             android:orientation="vertical"
             android:weightSum="1"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item5">
+            app:layout_constraintTop_toBottomOf="@+id/item5"
+            android:layout_marginEnd="74dp">
 
             <TextView
                 android:id="@+id/textView7"
