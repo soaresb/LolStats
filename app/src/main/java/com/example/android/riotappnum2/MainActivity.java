@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] xData = {"Mitch", "Jessica" , "Mohammad" , "Kelsey", "Sam", "Robert", "Ashley"};
     PieChart pieChart;
     BarChart barChart;
+    private static final String API_KEY = BuildConfig.API_KEY;
     private TextView textView2;
     private TextView textView3;
     private TextView textView4;
@@ -106,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
         barEntries = new ArrayList<>();
         BarDataSet barDataSet = new BarDataSet(barEntries,"");
         xAxis = new ArrayList<>();
-        apiKey = "RGAPI-692f1023-f257-4f00-b387-09d390ab4237";
 //        BarData theData = new BarData(xAxis,barDataSet);
 //        barChart.setData(theData);
         textView2 = (TextView) findViewById(R.id.textView2);
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         }
         loadJSONFromAsset();
         DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/"+s+"/recent?api_key="+apiKey});
+        task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/"+s+"/recent?api_key="+API_KEY});
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.games,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     progress3.show();
                     GetMatchData getMatchData = new GetMatchData();
                     try{
-                        getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key="+apiKey});}
+                        getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key="+API_KEY});}
                     catch (Exception e){e.printStackTrace();}
                 }
             }
@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 int tempp = summoner.gameIds.size();
                 GetMatchData getMatchData = new GetMatchData();
-                getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(0) + "?api_key="+apiKey});
+                getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(0) + "?api_key="+API_KEY});
 
             }
             catch (Exception e) {e.printStackTrace();}
@@ -634,7 +634,7 @@ public class MainActivity extends AppCompatActivity {
             progress2.show();
             GetFullMatchData getFullMatchData = new GetFullMatchData();
             try {
-                getFullMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key="+apiKey});
+                getFullMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(pageNum) + "?api_key="+API_KEY});
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -947,7 +947,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void getStats(View view){
         GetSummonerData getSummonerData = new GetSummonerData();
-        getSummonerData.execute(new String[]{"https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/"+searchbar.getText().toString()+"?api_key="+apiKey});
+        getSummonerData.execute(new String[]{"https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/"+searchbar.getText().toString()+"?api_key="+API_KEY});
 
 
     }
