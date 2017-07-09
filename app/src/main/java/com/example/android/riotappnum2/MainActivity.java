@@ -22,7 +22,7 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.support.v7.app.ActionBarActivity;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarData;
@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
         v = this.getWindow().getDecorView().findViewById(android.R.id.content);
         v.setVisibility(View.INVISIBLE);
         pieChart = (PieChart) findViewById(R.id.PieChart);
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         }
         loadJSONFromAsset();
         DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/"+s+"/recent?api_key="+API_KEY});
+        task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/"+s+"?queue=420&season=8&api_key="+API_KEY});
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.games,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

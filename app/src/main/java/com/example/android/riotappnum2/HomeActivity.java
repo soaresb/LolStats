@@ -1,5 +1,6 @@
 package com.example.android.riotappnum2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.support.v7.app.ActionBarActivity;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.FileOutputStream;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -30,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        getSupportActionBar().hide();
         editText = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button2);
         textView = (TextView) findViewById(R.id.textView) ;
@@ -74,6 +78,11 @@ public class HomeActivity extends AppCompatActivity {
                 intent.putExtra("ACCOUNTID", accountID);
                 intent.putExtra("ID",summonerID);
                 intent.putExtra("SUMMONERNAME",summonerName);
+                String FILENAME = "recentsummoners.txt";
+                FileOutputStream fos =openFileOutput(FILENAME, Context.MODE_PRIVATE);
+                byte [] buf = accountID.getBytes();
+                fos.write(buf);
+                fos.close();
                 startActivity(intent);
 
             }
@@ -88,7 +97,9 @@ public class HomeActivity extends AppCompatActivity {
     public void OnClick(View view){
         GetSummonerData getSummonerData = new GetSummonerData();
         getSummonerData.execute(new String[]{"https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/"+editText.getText().toString()+"?api_key="+API_KEY});
-
-
+    }
+    public void onGetFullStats(View view){
+        Intent intent = new Intent(getBaseContext(), SeasonStats.class);
+        startActivity(intent);
     }
 }
