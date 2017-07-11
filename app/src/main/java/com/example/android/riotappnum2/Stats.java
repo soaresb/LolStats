@@ -7,6 +7,10 @@ import java.util.List;
  * Created by Brian's PC on 5/30/2017.
  */
 
+/**
+ * Created by Brian's PC on 5/30/2017.
+ */
+
 public class Stats {
     public String summonerName;
     public String win;
@@ -23,6 +27,10 @@ public class Stats {
     public String totalDamageDealtToChampions;
     public String champKey;
     public String[] items;
+    public String spell1;
+    public String spell2;
+    public String time;
+    public String name;
     public int totalDamage;
     //after this go into timeline object and show those for extra data
 
