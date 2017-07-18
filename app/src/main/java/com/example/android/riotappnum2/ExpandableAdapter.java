@@ -18,6 +18,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.loopj.android.image.SmartImageView;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -138,6 +139,8 @@ public class ExpandableAdapter extends BaseAdapter {
 
         conV=convertView;
         Item item = items.get(position);
+        fullMatch=item.matchList;
+        //if(theRow.tag)
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap bmp = Bitmap.createBitmap(64, 64, conf);
         bmp.eraseColor(Color.GRAY);
@@ -146,22 +149,26 @@ public class ExpandableAdapter extends BaseAdapter {
         Bitmap bmpp = Bitmap.createBitmap(64, 64, conf);
         bmpp.eraseColor(Color.GRAY);
         theRow.item6.setImageBitmap(bmpp);
-        theRow.myImage.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/" + item.item5 + ".png");
-        theRow.item6.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/" + item.item6 + ".png");
+        theRow.myImage.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item5 + ".png");
+        theRow.item6.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item6 + ".png");
 //            if(theRow.item6==null){
 //                Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 //                Bitmap bmp = Bitmap.createBitmap(32, 32, conf);
 //                bmp.eraseColor(Color.GRAY);
 //                theRow.item6.setImageBitmap(bmp);
 //            }
-        new DownloadImageTask(theRow.item1)
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/" + item.item1 + ".png");
-        new DownloadImageTask(theRow.item2)
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/" + item.item2 + ".png");
-        new DownloadImageTask(theRow.item3)
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/" + item.item3 + ".png");
-        new DownloadImageTask(theRow.item4)
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/" + item.item4 + ".png");
+        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item1 + ".png").into(theRow.item1);
+        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item2 + ".png").into(theRow.item2);
+        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item3 + ".png").into(theRow.item3);
+        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item4 + ".png").into(theRow.item4);
+//        new DownloadImageTask(theRow.item1)
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item1 + ".png");
+//        new DownloadImageTask(theRow.item2)
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item2 + ".png");
+//        new DownloadImageTask(theRow.item3)
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item3 + ".png");
+//        new DownloadImageTask(theRow.item4)
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item4 + ".png");
         new DownloadImageTask(theRow.spell1)
                 .execute("http://ddragon.leagueoflegends.com/cdn/6.24.1/img/spell/" + item.spell1 + ".png");
         new DownloadImageTask(theRow.spell2)
@@ -174,23 +181,23 @@ public class ExpandableAdapter extends BaseAdapter {
             theRow.mFlWrapper.setVisibility(View.VISIBLE);
             theRow.arrow.setImageResource(arrow_up_float);
             //theRow.statsTable.setVisibility(View.INVISIBLE);
-            if(fullMatch.get(item.matchId)!=null){
+            //if(fullMatch.get(item.matchId)!=null){
                 updateTable(theRow.statsTable,fullMatch.get(item.matchId));
                 theRow.statsTable.setVisibility(View.VISIBLE);
-            }
-            else {
-                progress2 = new ProgressDialog(context);
-                progress2.setTitle("Loading");
-                progress2.setMessage("Wait while loading...");
-                progress2.setCancelable(false); // disable dismiss by tapping outside of the dialog
-                progress2.show();
-                GetFullMatchData getFullMatchData = new GetFullMatchData();
-                try {
-                    getFullMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + item.matchId + "?api_key=" + API_KEY});
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            //}
+//            else {
+//                progress2 = new ProgressDialog(context);
+//                progress2.setTitle("Loading");
+//                progress2.setMessage("Wait while loading...");
+//                progress2.setCancelable(false); // disable dismiss by tapping outside of the dialog
+//                progress2.show();
+//                GetFullMatchData getFullMatchData = new GetFullMatchData();
+//                try {
+//                    getFullMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + item.matchId + "?api_key=" + API_KEY});
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
             //updateTable(theRow.statsTable);
 
         } else {
@@ -489,151 +496,151 @@ public class ExpandableAdapter extends BaseAdapter {
         sum10gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(9).goldEarned)) / 1000)+" k");
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         SmartImageView c1i1 = (SmartImageView) table.findViewById(R.id.champ1item1);
-        c1i1.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[0]+".png");
+        c1i1.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[0]+".png");
         SmartImageView c1i2 = (SmartImageView) table.findViewById(R.id.champ1item2);
-        c1i2.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[1]+".png");
+        c1i2.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[1]+".png");
         SmartImageView c1i3 = (SmartImageView) table.findViewById(R.id.champ1item3);
-        c1i3.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[2]+".png");
+        c1i3.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[2]+".png");
         SmartImageView c1i4 = (SmartImageView) table.findViewById(R.id.champ1item4);
-        c1i4.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[3]+".png");
+        c1i4.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[3]+".png");
         SmartImageView c1i5 = (SmartImageView) table.findViewById(R.id.champ1item5);
-        c1i5.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[4]+".png");
+        c1i5.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[4]+".png");
         SmartImageView c1i6 = (SmartImageView) table.findViewById(R.id.champ1item6);
-        c1i6.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[5]+".png");
+        c1i6.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[5]+".png");
 
         SmartImageView c2i1 = (SmartImageView) table.findViewById(R.id.champ2item1);
-        c2i1.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[0]+".png");
+        c2i1.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[0]+".png");
         SmartImageView c2i2 = (SmartImageView) table.findViewById(R.id.champ2item2);
-        c2i2.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[1]+".png");
+        c2i2.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[1]+".png");
         SmartImageView c2i3 = (SmartImageView) table.findViewById(R.id.champ2item3);
-        c2i3.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[2]+".png");
+        c2i3.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[2]+".png");
         SmartImageView c2i4 = (SmartImageView) table.findViewById(R.id.champ2item4);
-        c2i4.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[3]+".png");
+        c2i4.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[3]+".png");
         SmartImageView c2i5 = (SmartImageView) table.findViewById(R.id.champ2item5);
-        c2i5.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[4]+".png");
+        c2i5.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[4]+".png");
         SmartImageView c2i6 = (SmartImageView) table.findViewById(R.id.champ2item6);
-        c2i6.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(0).items[5]+".png");
+        c2i6.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[5]+".png");
 
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ2item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(1).items[0]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[0]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ2item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(1).items[1]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[1]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ2item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(1).items[2]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[2]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ2item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(1).items[3]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[3]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ2item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(1).items[4]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[4]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ2item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(1).items[5]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[5]+".png");
 
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ3item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(2).items[0]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[0]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ3item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(2).items[1]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[1]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ3item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(2).items[2]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[2]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ3item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(2).items[3]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[3]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ3item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(2).items[4]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[4]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ3item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(2).items[5]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[5]+".png");
 
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ4item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(3).items[0]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[0]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ4item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(3).items[1]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[1]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ4item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(3).items[2]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[2]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ4item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(3).items[3]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[3]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ4item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(3).items[4]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[4]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ4item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(3).items[5]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[5]+".png");
 
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(4).items[0]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[0]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(4).items[1]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[1]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(4).items[2]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[2]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(4).items[3]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[3]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(4).items[4]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[4]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(4).items[5]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[5]+".png");
 
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(5).items[0]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[0]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(5).items[1]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[1]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(5).items[2]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[2]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(5).items[3]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[3]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(5).items[4]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[4]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(5).items[5]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[5]+".png");
 
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(6).items[0]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[0]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(6).items[1]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[1]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(6).items[2]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[2]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(6).items[3]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[3]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(6).items[4]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[4]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(6).items[5]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[5]+".png");
 
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(7).items[0]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[0]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(7).items[1]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[1]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(7).items[2]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[2]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(7).items[3]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[3]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(7).items[4]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[4]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(7).items[5]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[5]+".png");
 
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(8).items[0]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[0]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(8).items[1]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[1]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(8).items[2]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[2]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(8).items[3]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[3]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(8).items[4]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[4]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(8).items[5]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[5]+".png");
 
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(9).items[0]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[0]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(9).items[1]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[1]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(9).items[2]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[2]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(9).items[3]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[3]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(9).items[4]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[4]+".png");
         new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/item/"+match.fullMatchData.get(9).items[5]+".png");
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[5]+".png");
         notifyDataSetChanged();
         try{Thread.sleep(1000);}
         catch (Exception e){e.printStackTrace();}
-        progress2.dismiss();
+        //progress2.dismiss();
 
 
     }

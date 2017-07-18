@@ -34,6 +34,7 @@ public class Item implements Parcelable{
     public String time;
     public String matchId;
     HashMap<String, String> champData;
+    public HashMap<String,Match> matchList;
 
 
 
@@ -62,6 +63,7 @@ public class Item implements Parcelable{
         time=in.readString();
         matchId=in.readString();
         champData=in.readHashMap(ClassLoader.getSystemClassLoader());
+        matchList=in.readHashMap(ClassLoader.getSystemClassLoader());
 
     }
 
@@ -94,6 +96,7 @@ public class Item implements Parcelable{
         dest.writeString(time);
         dest.writeString(matchId);
         dest.writeMap(champData);
+        dest.writeMap(matchList);
 
     }
 

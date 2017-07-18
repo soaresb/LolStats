@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     List<Stats> statsList;
     HashMap<String, String> champData;
     HashMap<String, String> summonerSpellData;
+    public HashMap<String,Match> fullMatch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         summoner.accountId=Integer.parseInt(accountid);
         statsList = new ArrayList<Stats>();
         champData = new HashMap<String, String>();
+        fullMatch = new HashMap<String,Match>();
         summonerSpellData = new HashMap<String ,String>();
         DownloadWebPageTask task = new DownloadWebPageTask();
         task.execute(new String[] { "https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/"+String.valueOf(summoner.accountId)+"?queue=420&season=8&api_key="+API_KEY});
@@ -194,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
             item.matchId=summoner.gameIds.get(i);
             item.champData=champData;
             item.itemChanged=true;
+            item.matchList=fullMatch;
             items.add(item);
         }
 
@@ -286,18 +289,23 @@ public class MainActivity extends AppCompatActivity {
         //use those 20 match ids on the api call using a matchid to get stats
         @Override
         protected void onPostExecute(String result) {
+            Match thisMatch;
             try {
                 JSONObject json = new JSONObject(result);
+                thisMatch = new Match(json.getString("gameId"));
                 JSONArray jsonArray = json.getJSONArray("participantIdentities");
                 String parId="";
                 boolean firstHalf;
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject match = jsonArray.getJSONObject(i);
                     JSONObject newsummoner = (JSONObject) match.get("player");
+                    Stats newSummonerStats = new Stats();
+                    newSummonerStats.summonerName = newsummoner.getString("summonerName");
+                    thisMatch.fullMatchData.add(newSummonerStats);
                     if (newsummoner.getString("summonerId").equals(summoner.summonerId))
                     {
                         parId = match.getString("participantId");
-                        break;
+                        //break;
                     }
                 }
                 if(Integer.valueOf(parId) <= 5){
@@ -337,6 +345,21 @@ public class MainActivity extends AppCompatActivity {
                         statsList.add(newStats);
 
                     }
+                    Stats newStats2 = thisMatch.fullMatchData.get(i);
+                    newStats2.deaths = temp.getString("deaths");
+                    newStats2.kills = temp.getString("kills");
+                    newStats2.assists = temp.getString("assists");
+                    newStats2.totalMinionsKilled = temp.getString("totalMinionsKilled");
+                    newStats2.totalDamageDealtToChampions = temp.getString("totalDamageDealtToChampions");
+                    newStats2.champKey = match.getString("championId");
+                    newStats2.goldEarned = temp.getString("goldEarned");
+                    newStats2.items[0] = temp.getString("item0");
+                    newStats2.items[1] = temp.getString("item1");
+                    newStats2.items[2] = temp.getString("item2");
+                    newStats2.items[3] = temp.getString("item3");
+                    newStats2.items[4] = temp.getString("item4");
+                    newStats2.items[5] = temp.getString("item5");
+                    fullMatch.put(json.getString("gameId"),thisMatch);
 //                    if(firstHalf){
 //                        if(i<=4){
 //                            newStats.totalDamage += Integer.valueOf(temp.getString("totalDamageDealtToChampions"));
