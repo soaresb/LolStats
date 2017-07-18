@@ -1,5 +1,6 @@
 package com.example.android.riotappnum2;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     public HashMap<String, Match> fullMatch;
     EditText editText2;
     Button button;
-
+    ProgressDialog progress2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         loadJSONFromAsset();
         editText2 = (EditText) findViewById(R.id.editText2);
         editText2.setText(sum);
+
         button=(Button) findViewById(R.id.button2) ;
         loadSummonerSpells();
         lvItems = (ListView) findViewById(R.id.lv_items);
@@ -210,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
             item.matchList = fullMatch;
             items.add(item);
         }
-
+        progress2.dismiss();
         return new ExpandableAdapter(this, items);
     }
 
@@ -242,6 +244,11 @@ public class MainActivity extends AppCompatActivity {
         //use those 20 match ids on the api call using a matchid to get stats
         @Override
         protected void onPostExecute(String result) {
+            progress2 = new ProgressDialog(MainActivity.this);
+            progress2.setTitle("Loading");
+            progress2.setMessage("Wait while loading...");
+            progress2.setCancelable(false); // disable dismiss by tapping outside of the dialog
+            progress2.show();
             try {
                 JSONObject json = new JSONObject(result);
                 JSONArray jsonArray = json.getJSONArray("matches");
