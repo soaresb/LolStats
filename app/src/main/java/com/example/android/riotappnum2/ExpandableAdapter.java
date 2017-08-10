@@ -35,6 +35,7 @@ import okhttp3.Response;
 
 import static android.R.drawable.arrow_down_float;
 import static android.R.drawable.arrow_up_float;
+import android.os.Debug;
 
 
 public class ExpandableAdapter extends BaseAdapter {
@@ -48,6 +49,8 @@ public class ExpandableAdapter extends BaseAdapter {
     FrameLayout frameLayout;
     View conV;
     HashMap<String, String> champData;
+    TableLayout currentTable;
+    Match currentMatch;
 
 
     public class Row {
@@ -206,25 +209,15 @@ public class ExpandableAdapter extends BaseAdapter {
             champData=item.champData;
             theRow.mFlWrapper.setVisibility(View.VISIBLE);
             theRow.arrow.setImageResource(arrow_up_float);
-            //theRow.statsTable.setVisibility(View.INVISIBLE);
-            //if(fullMatch.get(item.matchId)!=null){
-                updateTable(theRow.statsTable,fullMatch.get(item.matchId));
-                theRow.statsTable.setVisibility(View.VISIBLE);
-            //}
-//            else {
-//                progress2 = new ProgressDialog(context);
-//                progress2.setTitle("Loading");
-//                progress2.setMessage("Wait while loading...");
-//                progress2.setCancelable(false); // disable dismiss by tapping outside of the dialog
-//                progress2.show();
-//                GetFullMatchData getFullMatchData = new GetFullMatchData();
-//                try {
-//                    getFullMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + item.matchId + "?api_key=" + API_KEY});
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-            //updateTable(theRow.statsTable);
+            currentTable=theRow.statsTable;
+            currentMatch=fullMatch.get(item.matchId);
+
+            updateTbl updateTbl = new updateTbl();
+            updateTbl.execute();
+
+            //updateTable(theRow.statsTable,fullMatch.get(item.matchId));
+            //theRow.statsTable.setVisibility(View.VISIBLE);
+
 
         } else {
             theRow.mFlWrapper.setVisibility(View.GONE);
@@ -390,6 +383,8 @@ public class ExpandableAdapter extends BaseAdapter {
     }
 
     private void updateTable(TableLayout table,Match match) {
+
+
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         final Bitmap bmp = Bitmap.createBitmap(32, 32, conf);
         bmp.eraseColor(Color.GRAY);
@@ -421,373 +416,785 @@ public class ExpandableAdapter extends BaseAdapter {
         sum6cs.setText(match.fullMatchData.get(5).totalMinionsKilled);
         sum6gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(5).goldEarned)) / 1000)+" k");
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        TextView summoner2 = (TextView) table.findViewById(R.id.row2champ2);
-        TextView summoner7 = (TextView) table.findViewById(R.id.row2champ7);
-        TextView summoner2kda = (TextView) table.findViewById(R.id.row2champ2kda);
-        TextView summoner7kda = (TextView) table.findViewById(R.id.row2champ7kda);
-        summoner2kda.setText(match.fullMatchData.get(1).kills+"/"+match.fullMatchData.get(1).deaths+"/"+match.fullMatchData.get(1).assists+"\n");
-        summoner7kda.setText(match.fullMatchData.get(6).kills+"/"+match.fullMatchData.get(6).deaths+"/"+match.fullMatchData.get(6).assists+"\n");
-        String sum2 = champData.get(match.fullMatchData.get(1).champKey).toLowerCase();
-        int resID2 = context.getResources().getIdentifier(sum2, "drawable", context.getPackageName());
-        ImageView sum2pic = (ImageView) table.findViewById(R.id.row2champ2pic);
-        sum2pic.setImageResource(resID2);
-        String sum7 = champData.get(match.fullMatchData.get(6).champKey).toLowerCase();
-        int resID7 = context.getResources().getIdentifier(sum7, "drawable", context.getPackageName());
-        ImageView sum7pic = (ImageView) table.findViewById(R.id.row2champ7pic);
-        sum7pic.setImageResource(resID7);
-        summoner2.setText(match.fullMatchData.get(1).summonerName);
-        summoner7.setText(match.fullMatchData.get(6).summonerName);
-        TextView sum2gold = (TextView) table.findViewById(R.id.champ2goldnum);
-        TextView sum2cs = (TextView) table.findViewById(R.id.champ2csnum);
-        sum2cs.setText(match.fullMatchData.get(1).totalMinionsKilled);
-        sum2gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(1).goldEarned)) / 1000)+" k");
-        TextView sum7gold = (TextView) table.findViewById(R.id.champ7goldnum);
-        TextView sum7cs = (TextView) table.findViewById(R.id.champ7csnum);
-        sum7cs.setText(match.fullMatchData.get(6).totalMinionsKilled);
-        sum7gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(6).goldEarned)) / 1000)+" k");
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        TextView summoner3 = (TextView) table.findViewById(R.id.row3champ3);
-        TextView summoner8 = (TextView) table.findViewById(R.id.row3champ8);
-        TextView summoner3kda = (TextView) table.findViewById(R.id.row3champ3kda);
-        TextView summoner8kda = (TextView) table.findViewById(R.id.row3champ8kda);
-        summoner3kda.setText(match.fullMatchData.get(2).kills+"/"+match.fullMatchData.get(2).deaths+"/"+match.fullMatchData.get(2).assists+"\n");
-        summoner8kda.setText(match.fullMatchData.get(7).kills+"/"+match.fullMatchData.get(7).deaths+"/"+match.fullMatchData.get(7).assists+"\n");
-        String sum3 = champData.get(match.fullMatchData.get(2).champKey).toLowerCase();
-        int resID3 = context.getResources().getIdentifier(sum3, "drawable", context.getPackageName());
-        ImageView sum3pic = (ImageView) table.findViewById(R.id.row3champ3pic);
-        sum3pic.setImageResource(resID3);
-        String sum8 = champData.get(match.fullMatchData.get(7).champKey).toLowerCase();
-        int resID8 = context.getResources().getIdentifier(sum8, "drawable", context.getPackageName());
-        ImageView sum8pic = (ImageView) table.findViewById(R.id.row3champ8pic);
-        sum8pic.setImageResource(resID8);
-        summoner3.setText(match.fullMatchData.get(2).summonerName);
-        summoner8.setText(match.fullMatchData.get(7).summonerName);
-        TextView sum3gold = (TextView) table.findViewById(R.id.champ3goldnum);
-        TextView sum3cs = (TextView) table.findViewById(R.id.champ3csnum);
-        sum3cs.setText(match.fullMatchData.get(2).totalMinionsKilled);
-        sum3gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(2).goldEarned)) / 1000)+" k");
-        TextView sum8gold = (TextView) table.findViewById(R.id.champ8goldnum);
-        TextView sum8cs = (TextView) table.findViewById(R.id.champ8csnum);
-        sum8cs.setText(match.fullMatchData.get(7).totalMinionsKilled);
-        sum8gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(7).goldEarned)) / 1000)+" k");
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        TextView summoner4 = (TextView) table.findViewById(R.id.row4champ4);
-        TextView summoner9 = (TextView) table.findViewById(R.id.row4champ9);
-        TextView summoner4kda = (TextView) table.findViewById(R.id.row4champ4kda);
-        TextView summoner9kda = (TextView) table.findViewById(R.id.row4champ9kda);
-        summoner4kda.setText(match.fullMatchData.get(3).kills+"/"+match.fullMatchData.get(3).deaths+"/"+match.fullMatchData.get(3).assists+"\n");
-        summoner9kda.setText(match.fullMatchData.get(8).kills+"/"+match.fullMatchData.get(8).deaths+"/"+match.fullMatchData.get(8).assists+"\n");
-        String sum4 = champData.get(match.fullMatchData.get(3).champKey).toLowerCase();
-        int resID4 = context.getResources().getIdentifier(sum4, "drawable", context.getPackageName());
-        ImageView sum4pic = (ImageView) table.findViewById(R.id.row4champ4pic);
-        sum4pic.setImageResource(resID4);
-        String sum9 = champData.get(match.fullMatchData.get(8).champKey).toLowerCase();
-        int resID9 = context.getResources().getIdentifier(sum9, "drawable", context.getPackageName());
-        ImageView sum9pic = (ImageView) table.findViewById(R.id.row4champ9pic);
-        sum9pic.setImageResource(resID9);
-        summoner4.setText(match.fullMatchData.get(3).summonerName);
-        summoner9.setText(match.fullMatchData.get(8).summonerName);
-        TextView sum4gold = (TextView) table.findViewById(R.id.champ4goldnum);
-        TextView sum4cs = (TextView) table.findViewById(R.id.champ4csnum);
-        sum4cs.setText(match.fullMatchData.get(3).totalMinionsKilled);
-        sum4gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(3).goldEarned)) / 1000)+" k");
-        TextView sum9gold = (TextView) table.findViewById(R.id.champ9goldnum);
-        TextView sum9cs = (TextView) table.findViewById(R.id.champ9csnum);
-        sum9cs.setText(match.fullMatchData.get(8).totalMinionsKilled);
-        sum9gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(8).goldEarned)) / 1000)+" k");
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        TextView summoner5 = (TextView) table.findViewById(R.id.row5champ5);
-        TextView summoner10 = (TextView) table.findViewById(R.id.row5champ10);
-        TextView summoner5kda = (TextView) table.findViewById(R.id.row5champ5kda);
-        TextView summoner10kda = (TextView) table.findViewById(R.id.row5champ10kda);
-        summoner5kda.setText(match.fullMatchData.get(4).kills+"/"+match.fullMatchData.get(4).deaths+"/"+match.fullMatchData.get(4).assists+"\n");
-        summoner10kda.setText(match.fullMatchData.get(9).kills+"/"+match.fullMatchData.get(9).deaths+"/"+match.fullMatchData.get(9).assists+"\n");
-        String sum5 = champData.get(match.fullMatchData.get(4).champKey).toLowerCase();
-        int resID5 = context.getResources().getIdentifier(sum5, "drawable", context.getPackageName());
-        ImageView sum5pic = (ImageView) table.findViewById(R.id.row5champ5pic);
-        sum5pic.setImageResource(resID5);
-        String sum10 = champData.get(match.fullMatchData.get(9).champKey).toLowerCase();
-        int resID10 = context.getResources().getIdentifier(sum10, "drawable", context.getPackageName());
-        ImageView sum10pic = (ImageView) table.findViewById(R.id.row5champ10pic);
-        sum10pic.setImageResource(resID10);
-//        new DownloadImageTask((ImageView) table.findViewById(R.id.row5champ5pic))
-//                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/champion/"+(champData.get(match.fullMatchData.get(4).champKey)).replaceAll("\\s+","")+".png");
-//        new DownloadImageTask((ImageView) table.findViewById(R.id.row5champ10pic))
-//                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/champion/"+(champData.get(match.fullMatchData.get(9).champKey)).replaceAll("\\s+","")+".png");
-        summoner5.setText(match.fullMatchData.get(4).summonerName);
-        summoner10.setText(match.fullMatchData.get(9).summonerName);
-        TextView sum5gold = (TextView) table.findViewById(R.id.champ5goldnum);
-        TextView sum5cs = (TextView) table.findViewById(R.id.champ5csnum);
-        sum5cs.setText(match.fullMatchData.get(4).totalMinionsKilled);
-        sum5gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(4).goldEarned)) / 1000)+" k");
-        TextView sum10gold = (TextView) table.findViewById(R.id.champ10goldnum);
-        TextView sum10cs = (TextView) table.findViewById(R.id.champ10csnum);
-        sum10cs.setText(match.fullMatchData.get(9).totalMinionsKilled);
-        sum10gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(9).goldEarned)) / 1000)+" k");
+//        TextView summoner2 = (TextView) table.findViewById(R.id.row2champ2);
+//        TextView summoner7 = (TextView) table.findViewById(R.id.row2champ7);
+//        TextView summoner2kda = (TextView) table.findViewById(R.id.row2champ2kda);
+//        TextView summoner7kda = (TextView) table.findViewById(R.id.row2champ7kda);
+//        summoner2kda.setText(match.fullMatchData.get(1).kills+"/"+match.fullMatchData.get(1).deaths+"/"+match.fullMatchData.get(1).assists+"\n");
+//        summoner7kda.setText(match.fullMatchData.get(6).kills+"/"+match.fullMatchData.get(6).deaths+"/"+match.fullMatchData.get(6).assists+"\n");
+//        String sum2 = champData.get(match.fullMatchData.get(1).champKey).toLowerCase();
+//        int resID2 = context.getResources().getIdentifier(sum2, "drawable", context.getPackageName());
+//        ImageView sum2pic = (ImageView) table.findViewById(R.id.row2champ2pic);
+//        sum2pic.setImageResource(resID2);
+//        String sum7 = champData.get(match.fullMatchData.get(6).champKey).toLowerCase();
+//        int resID7 = context.getResources().getIdentifier(sum7, "drawable", context.getPackageName());
+//        ImageView sum7pic = (ImageView) table.findViewById(R.id.row2champ7pic);
+//        sum7pic.setImageResource(resID7);
+//        summoner2.setText(match.fullMatchData.get(1).summonerName);
+//        summoner7.setText(match.fullMatchData.get(6).summonerName);
+//        TextView sum2gold = (TextView) table.findViewById(R.id.champ2goldnum);
+//        TextView sum2cs = (TextView) table.findViewById(R.id.champ2csnum);
+//        sum2cs.setText(match.fullMatchData.get(1).totalMinionsKilled);
+//        sum2gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(1).goldEarned)) / 1000)+" k");
+//        TextView sum7gold = (TextView) table.findViewById(R.id.champ7goldnum);
+//        TextView sum7cs = (TextView) table.findViewById(R.id.champ7csnum);
+//        sum7cs.setText(match.fullMatchData.get(6).totalMinionsKilled);
+//        sum7gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(6).goldEarned)) / 1000)+" k");
+//        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        TextView summoner3 = (TextView) table.findViewById(R.id.row3champ3);
+//        TextView summoner8 = (TextView) table.findViewById(R.id.row3champ8);
+//        TextView summoner3kda = (TextView) table.findViewById(R.id.row3champ3kda);
+//        TextView summoner8kda = (TextView) table.findViewById(R.id.row3champ8kda);
+//        summoner3kda.setText(match.fullMatchData.get(2).kills+"/"+match.fullMatchData.get(2).deaths+"/"+match.fullMatchData.get(2).assists+"\n");
+//        summoner8kda.setText(match.fullMatchData.get(7).kills+"/"+match.fullMatchData.get(7).deaths+"/"+match.fullMatchData.get(7).assists+"\n");
+//        String sum3 = champData.get(match.fullMatchData.get(2).champKey).toLowerCase();
+//        int resID3 = context.getResources().getIdentifier(sum3, "drawable", context.getPackageName());
+//        ImageView sum3pic = (ImageView) table.findViewById(R.id.row3champ3pic);
+//        sum3pic.setImageResource(resID3);
+//        String sum8 = champData.get(match.fullMatchData.get(7).champKey).toLowerCase();
+//        int resID8 = context.getResources().getIdentifier(sum8, "drawable", context.getPackageName());
+//        ImageView sum8pic = (ImageView) table.findViewById(R.id.row3champ8pic);
+//        sum8pic.setImageResource(resID8);
+//        summoner3.setText(match.fullMatchData.get(2).summonerName);
+//        summoner8.setText(match.fullMatchData.get(7).summonerName);
+//        TextView sum3gold = (TextView) table.findViewById(R.id.champ3goldnum);
+//        TextView sum3cs = (TextView) table.findViewById(R.id.champ3csnum);
+//        sum3cs.setText(match.fullMatchData.get(2).totalMinionsKilled);
+//        sum3gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(2).goldEarned)) / 1000)+" k");
+//        TextView sum8gold = (TextView) table.findViewById(R.id.champ8goldnum);
+//        TextView sum8cs = (TextView) table.findViewById(R.id.champ8csnum);
+//        sum8cs.setText(match.fullMatchData.get(7).totalMinionsKilled);
+//        sum8gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(7).goldEarned)) / 1000)+" k");
+//        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        TextView summoner4 = (TextView) table.findViewById(R.id.row4champ4);
+//        TextView summoner9 = (TextView) table.findViewById(R.id.row4champ9);
+//        TextView summoner4kda = (TextView) table.findViewById(R.id.row4champ4kda);
+//        TextView summoner9kda = (TextView) table.findViewById(R.id.row4champ9kda);
+//        summoner4kda.setText(match.fullMatchData.get(3).kills+"/"+match.fullMatchData.get(3).deaths+"/"+match.fullMatchData.get(3).assists+"\n");
+//        summoner9kda.setText(match.fullMatchData.get(8).kills+"/"+match.fullMatchData.get(8).deaths+"/"+match.fullMatchData.get(8).assists+"\n");
+//        String sum4 = champData.get(match.fullMatchData.get(3).champKey).toLowerCase();
+//        int resID4 = context.getResources().getIdentifier(sum4, "drawable", context.getPackageName());
+//        ImageView sum4pic = (ImageView) table.findViewById(R.id.row4champ4pic);
+//        sum4pic.setImageResource(resID4);
+//        String sum9 = champData.get(match.fullMatchData.get(8).champKey).toLowerCase();
+//        int resID9 = context.getResources().getIdentifier(sum9, "drawable", context.getPackageName());
+//        ImageView sum9pic = (ImageView) table.findViewById(R.id.row4champ9pic);
+//        sum9pic.setImageResource(resID9);
+//        summoner4.setText(match.fullMatchData.get(3).summonerName);
+//        summoner9.setText(match.fullMatchData.get(8).summonerName);
+//        TextView sum4gold = (TextView) table.findViewById(R.id.champ4goldnum);
+//        TextView sum4cs = (TextView) table.findViewById(R.id.champ4csnum);
+//        sum4cs.setText(match.fullMatchData.get(3).totalMinionsKilled);
+//        sum4gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(3).goldEarned)) / 1000)+" k");
+//        TextView sum9gold = (TextView) table.findViewById(R.id.champ9goldnum);
+//        TextView sum9cs = (TextView) table.findViewById(R.id.champ9csnum);
+//        sum9cs.setText(match.fullMatchData.get(8).totalMinionsKilled);
+//        sum9gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(8).goldEarned)) / 1000)+" k");
+//        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        TextView summoner5 = (TextView) table.findViewById(R.id.row5champ5);
+//        TextView summoner10 = (TextView) table.findViewById(R.id.row5champ10);
+//        TextView summoner5kda = (TextView) table.findViewById(R.id.row5champ5kda);
+//        TextView summoner10kda = (TextView) table.findViewById(R.id.row5champ10kda);
+//        summoner5kda.setText(match.fullMatchData.get(4).kills+"/"+match.fullMatchData.get(4).deaths+"/"+match.fullMatchData.get(4).assists+"\n");
+//        summoner10kda.setText(match.fullMatchData.get(9).kills+"/"+match.fullMatchData.get(9).deaths+"/"+match.fullMatchData.get(9).assists+"\n");
+//        String sum5 = champData.get(match.fullMatchData.get(4).champKey).toLowerCase();
+//        int resID5 = context.getResources().getIdentifier(sum5, "drawable", context.getPackageName());
+//        ImageView sum5pic = (ImageView) table.findViewById(R.id.row5champ5pic);
+//        sum5pic.setImageResource(resID5);
+//        String sum10 = champData.get(match.fullMatchData.get(9).champKey).toLowerCase();
+//        int resID10 = context.getResources().getIdentifier(sum10, "drawable", context.getPackageName());
+//        ImageView sum10pic = (ImageView) table.findViewById(R.id.row5champ10pic);
+//        sum10pic.setImageResource(resID10);
+////        new DownloadImageTask((ImageView) table.findViewById(R.id.row5champ5pic))
+////                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/champion/"+(champData.get(match.fullMatchData.get(4).champKey)).replaceAll("\\s+","")+".png");
+////        new DownloadImageTask((ImageView) table.findViewById(R.id.row5champ10pic))
+////                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/champion/"+(champData.get(match.fullMatchData.get(9).champKey)).replaceAll("\\s+","")+".png");
+//        summoner5.setText(match.fullMatchData.get(4).summonerName);
+//        summoner10.setText(match.fullMatchData.get(9).summonerName);
+//        TextView sum5gold = (TextView) table.findViewById(R.id.champ5goldnum);
+//        TextView sum5cs = (TextView) table.findViewById(R.id.champ5csnum);
+//        sum5cs.setText(match.fullMatchData.get(4).totalMinionsKilled);
+//        sum5gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(4).goldEarned)) / 1000)+" k");
+//        TextView sum10gold = (TextView) table.findViewById(R.id.champ10goldnum);
+//        TextView sum10cs = (TextView) table.findViewById(R.id.champ10csnum);
+//        sum10cs.setText(match.fullMatchData.get(9).totalMinionsKilled);
+//        sum10gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(9).goldEarned)) / 1000)+" k");
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        SmartImageView c1i1 = (SmartImageView) table.findViewById(R.id.champ1item1);
-        c1i1.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[0]+".png");
-        SmartImageView c1i2 = (SmartImageView) table.findViewById(R.id.champ1item2);
-        c1i2.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[1]+".png");
-        SmartImageView c1i3 = (SmartImageView) table.findViewById(R.id.champ1item3);
-        c1i3.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[2]+".png");
-        SmartImageView c1i4 = (SmartImageView) table.findViewById(R.id.champ1item4);
-        c1i4.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[3]+".png");
-        SmartImageView c1i5 = (SmartImageView) table.findViewById(R.id.champ1item5);
-        c1i5.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[4]+".png");
-        SmartImageView c1i6 = (SmartImageView) table.findViewById(R.id.champ1item6);
-        c1i6.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[5]+".png");
+//        SmartImageView c1i1 = (SmartImageView) table.findViewById(R.id.champ1item1);
+//        c1i1.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[0]+".png");
+//        SmartImageView c1i2 = (SmartImageView) table.findViewById(R.id.champ1item2);
+//        c1i2.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[1]+".png");
+//        SmartImageView c1i3 = (SmartImageView) table.findViewById(R.id.champ1item3);
+//        c1i3.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[2]+".png");
+//        SmartImageView c1i4 = (SmartImageView) table.findViewById(R.id.champ1item4);
+//        c1i4.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[3]+".png");
+//        SmartImageView c1i5 = (SmartImageView) table.findViewById(R.id.champ1item5);
+//        c1i5.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[4]+".png");
+//        SmartImageView c1i6 = (SmartImageView) table.findViewById(R.id.champ1item6);
+//        c1i6.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[5]+".png");
+//
+//        final ImageView c2i1 = (ImageView)table.findViewById(R.id.champ2item1);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[0]+".png")
+//                .into(c2i1, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c2i1.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c2i2 = (ImageView)table.findViewById(R.id.champ2item2);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[1]+".png")
+//                .into(c2i2, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c2i2.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c2i3 = (ImageView)table.findViewById(R.id.champ2item3);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[2]+".png")
+//                .into(c2i3, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c2i3.setImageBitmap(bmp);
+//                    }
+//                });
+//
+//        final ImageView c2i4 = (ImageView)table.findViewById(R.id.champ2item4);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[3]+".png")
+//                .into(c2i4, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c2i4.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c2i5 = (ImageView)table.findViewById(R.id.champ2item5);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[4]+".png")
+//                .into(c2i5, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c2i5.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c2i6 = (ImageView)table.findViewById(R.id.champ2item6);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[5]+".png")
+//                .into(c2i6, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c2i6.setImageBitmap(bmp);
+//                    }
+//                });
+//
+//        final ImageView c3i1 = (ImageView)table.findViewById(R.id.champ3item1);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[0]+".png")
+//                .into(c3i1, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c3i1.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c3i2 = (ImageView)table.findViewById(R.id.champ3item2);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[1]+".png")
+//                .into(c3i2, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c3i2.setImageBitmap(bmp);
+//                    }
+//                });
+//
+//        final ImageView c3i3 = (ImageView)table.findViewById(R.id.champ3item3);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[2]+".png")
+//                .into(c3i3, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c3i3.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c3i4 = (ImageView)table.findViewById(R.id.champ3item4);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[3]+".png")
+//                .into(c3i4, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c3i4.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c3i5 = (ImageView)table.findViewById(R.id.champ3item5);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[4]+".png")
+//                .into(c3i5, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c3i5.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c3i6 = (ImageView)table.findViewById(R.id.champ3item6);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[5]+".png")
+//                .into(c3i6, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c3i6.setImageBitmap(bmp);
+//                    }
+//                });
+//
+//        final ImageView c4i1 = (ImageView)table.findViewById(R.id.champ4item1);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[0]+".png")
+//                .into(c4i1, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c4i1.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c4i2 = (ImageView)table.findViewById(R.id.champ4item2);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[1]+".png")
+//                .into(c4i2, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c4i2.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c4i3 = (ImageView)table.findViewById(R.id.champ4item3);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[2]+".png")
+//                .into(c4i3, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c4i3.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c4i4 = (ImageView)table.findViewById(R.id.champ4item4);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[3]+".png")
+//                .into(c4i4, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c4i4.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c4i5 = (ImageView)table.findViewById(R.id.champ4item5);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[4]+".png")
+//                .into(c4i5, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c4i5.setImageBitmap(bmp);
+//                    }
+//                });
+//        final ImageView c4i6 = (ImageView)table.findViewById(R.id.champ4item6);
+//        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[5]+".png")
+//                .into(c4i6, new com.squareup.picasso.Callback() {
+//                    public void onSuccess() {
+//                    }
+//                    public void onError() {
+//                        c4i6.setImageBitmap(bmp);
+//                    }
+//                });
 
-        final ImageView c2i1 = (ImageView)table.findViewById(R.id.champ2item1);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[0]+".png")
-                .into(c2i1, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c2i1.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c2i2 = (ImageView)table.findViewById(R.id.champ2item2);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[1]+".png")
-                .into(c2i2, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c2i2.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c2i3 = (ImageView)table.findViewById(R.id.champ2item3);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[2]+".png")
-                .into(c2i3, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c2i3.setImageBitmap(bmp);
-                    }
-                });
-
-        final ImageView c2i4 = (ImageView)table.findViewById(R.id.champ2item4);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[3]+".png")
-                .into(c2i4, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c2i4.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c2i5 = (ImageView)table.findViewById(R.id.champ2item5);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[4]+".png")
-                .into(c2i5, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c2i5.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c2i6 = (ImageView)table.findViewById(R.id.champ2item6);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[5]+".png")
-                .into(c2i6, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c2i6.setImageBitmap(bmp);
-                    }
-                });
-
-        final ImageView c3i1 = (ImageView)table.findViewById(R.id.champ3item1);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[0]+".png")
-                .into(c3i1, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c3i1.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c3i2 = (ImageView)table.findViewById(R.id.champ3item2);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[1]+".png")
-                .into(c3i2, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c3i2.setImageBitmap(bmp);
-                    }
-                });
-
-        final ImageView c3i3 = (ImageView)table.findViewById(R.id.champ3item3);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[2]+".png")
-                .into(c3i3, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c3i3.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c3i4 = (ImageView)table.findViewById(R.id.champ3item4);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[3]+".png")
-                .into(c3i4, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c3i4.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c3i5 = (ImageView)table.findViewById(R.id.champ3item5);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[4]+".png")
-                .into(c3i5, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c3i5.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c3i6 = (ImageView)table.findViewById(R.id.champ3item6);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[5]+".png")
-                .into(c3i6, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c3i6.setImageBitmap(bmp);
-                    }
-                });
-
-        final ImageView c4i1 = (ImageView)table.findViewById(R.id.champ4item1);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[0]+".png")
-                .into(c4i1, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c4i1.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c4i2 = (ImageView)table.findViewById(R.id.champ4item2);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[1]+".png")
-                .into(c4i2, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c4i2.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c4i3 = (ImageView)table.findViewById(R.id.champ4item3);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[2]+".png")
-                .into(c4i3, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c4i3.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c4i4 = (ImageView)table.findViewById(R.id.champ4item4);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[3]+".png")
-                .into(c4i4, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c4i4.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c4i5 = (ImageView)table.findViewById(R.id.champ4item5);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[4]+".png")
-                .into(c4i5, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c4i5.setImageBitmap(bmp);
-                    }
-                });
-        final ImageView c4i6 = (ImageView)table.findViewById(R.id.champ4item6);
-        Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[5]+".png")
-                .into(c4i6, new com.squareup.picasso.Callback() {
-                    public void onSuccess() {
-                    }
-                    public void onError() {
-                        c4i6.setImageBitmap(bmp);
-                    }
-                });
-
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[0]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[1]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[2]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[3]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[4]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[5]+".png");
-
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[0]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[1]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[2]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[3]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[4]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[5]+".png");
-
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[0]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[1]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[2]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[3]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[4]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[5]+".png");
-
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[0]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[1]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[2]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[3]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[4]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[5]+".png");
-
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[0]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[1]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[2]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[3]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[4]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[5]+".png");
-
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item1))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[0]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item2))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[1]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item3))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[2]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item4))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[3]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item5))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[4]+".png");
-        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item6))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[5]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item1))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[0]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item2))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[1]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item3))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[2]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item4))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[3]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item5))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[4]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item6))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[5]+".png");
+//
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item1))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[0]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item2))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[1]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item3))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[2]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item4))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[3]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item5))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[4]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item6))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[5]+".png");
+//
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item1))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[0]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item2))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[1]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item3))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[2]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item4))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[3]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item5))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[4]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item6))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[5]+".png");
+//
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item1))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[0]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item2))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[1]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item3))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[2]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item4))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[3]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item5))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[4]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item6))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[5]+".png");
+//
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item1))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[0]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item2))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[1]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item3))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[2]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item4))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[3]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item5))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[4]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item6))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[5]+".png");
+//
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item1))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[0]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item2))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[1]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item3))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[2]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item4))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[3]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item5))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[4]+".png");
+//        new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item6))
+//                .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[5]+".png");
         notifyDataSetChanged();
         try{Thread.sleep(1000);}
         catch (Exception e){e.printStackTrace();}
         //progress2.dismiss();
+        //Debug.stopMethodTracing();
 
 
+    }
+
+    public class updateTbl extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            return null;
+        }
+//        @Override
+        protected void onPostExecute(String result) {
+            try{
+                Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+                final Bitmap bmp = Bitmap.createBitmap(32, 32, conf);
+                bmp.eraseColor(Color.GRAY);
+                TableLayout table = currentTable;
+                Match match = currentMatch;
+
+                TextView summoner1 = (TextView) table.findViewById(R.id.row1champ1);
+                TextView summoner6 = (TextView) table.findViewById(R.id.row1champ6);
+                TextView summoner1kda = (TextView) table.findViewById(R.id.row1champ1kda);
+                TextView summoner6kda = (TextView) table.findViewById(R.id.row1champ6kda);
+                summoner1kda.setText(match.fullMatchData.get(0).kills + "/" + match.fullMatchData.get(0).deaths + "/" + match.fullMatchData.get(0).assists + "\n");
+                table.setVisibility(View.VISIBLE);
+                summoner6kda.setText(match.fullMatchData.get(5).kills + "/" + match.fullMatchData.get(5).deaths + "/" + match.fullMatchData.get(5).assists + "\n");
+                String sum1 = champData.get(match.fullMatchData.get(0).champKey).toLowerCase();
+                int resID1 = context.getResources().getIdentifier(sum1, "drawable", context.getPackageName());
+                ImageView sum1pic = (ImageView) table.findViewById(R.id.row1champ1pic);
+                sum1pic.setImageResource(resID1);
+                String sum6 = champData.get(match.fullMatchData.get(5).champKey).toLowerCase();
+                int resID6 = context.getResources().getIdentifier(sum6, "drawable", context.getPackageName());
+                ImageView sum6pic = (ImageView) table.findViewById(R.id.row1champ6pic);
+                sum6pic.setImageResource(resID6);
+                summoner1.setText(match.fullMatchData.get(0).summonerName);
+                summoner6.setText(match.fullMatchData.get(5).summonerName);
+                TextView sum1gold = (TextView) table.findViewById(R.id.champ1goldnum);
+                TextView sum1cs = (TextView) table.findViewById(R.id.champ1csnum);
+                sum1cs.setText(match.fullMatchData.get(0).totalMinionsKilled);
+                sum1gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(0).goldEarned)) / 1000)+" k");
+                TextView sum6gold = (TextView) table.findViewById(R.id.champ6goldnum);
+                TextView sum6cs = (TextView) table.findViewById(R.id.champ6csnum);
+                sum6cs.setText(match.fullMatchData.get(5).totalMinionsKilled);
+                sum6gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(5).goldEarned)) / 1000)+" k");
+
+                TextView summoner2 = (TextView) table.findViewById(R.id.row2champ2);
+                TextView summoner7 = (TextView) table.findViewById(R.id.row2champ7);
+                TextView summoner2kda = (TextView) table.findViewById(R.id.row2champ2kda);
+                TextView summoner7kda = (TextView) table.findViewById(R.id.row2champ7kda);
+                summoner2kda.setText(match.fullMatchData.get(1).kills+"/"+match.fullMatchData.get(1).deaths+"/"+match.fullMatchData.get(1).assists+"\n");
+                summoner7kda.setText(match.fullMatchData.get(6).kills+"/"+match.fullMatchData.get(6).deaths+"/"+match.fullMatchData.get(6).assists+"\n");
+                String sum2 = champData.get(match.fullMatchData.get(1).champKey).toLowerCase();
+                int resID2 = context.getResources().getIdentifier(sum2, "drawable", context.getPackageName());
+                ImageView sum2pic = (ImageView) table.findViewById(R.id.row2champ2pic);
+                sum2pic.setImageResource(resID2);
+                String sum7 = champData.get(match.fullMatchData.get(6).champKey).toLowerCase();
+                int resID7 = context.getResources().getIdentifier(sum7, "drawable", context.getPackageName());
+                ImageView sum7pic = (ImageView) table.findViewById(R.id.row2champ7pic);
+                sum7pic.setImageResource(resID7);
+                summoner2.setText(match.fullMatchData.get(1).summonerName);
+                summoner7.setText(match.fullMatchData.get(6).summonerName);
+                TextView sum2gold = (TextView) table.findViewById(R.id.champ2goldnum);
+                TextView sum2cs = (TextView) table.findViewById(R.id.champ2csnum);
+                sum2cs.setText(match.fullMatchData.get(1).totalMinionsKilled);
+                sum2gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(1).goldEarned)) / 1000)+" k");
+                TextView sum7gold = (TextView) table.findViewById(R.id.champ7goldnum);
+                TextView sum7cs = (TextView) table.findViewById(R.id.champ7csnum);
+                sum7cs.setText(match.fullMatchData.get(6).totalMinionsKilled);
+                sum7gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(6).goldEarned)) / 1000)+" k");
+
+                TextView summoner3 = (TextView) table.findViewById(R.id.row3champ3);
+                TextView summoner8 = (TextView) table.findViewById(R.id.row3champ8);
+                TextView summoner3kda = (TextView) table.findViewById(R.id.row3champ3kda);
+                TextView summoner8kda = (TextView) table.findViewById(R.id.row3champ8kda);
+                summoner3kda.setText(match.fullMatchData.get(2).kills+"/"+match.fullMatchData.get(2).deaths+"/"+match.fullMatchData.get(2).assists+"\n");
+                summoner8kda.setText(match.fullMatchData.get(7).kills+"/"+match.fullMatchData.get(7).deaths+"/"+match.fullMatchData.get(7).assists+"\n");
+                String sum3 = champData.get(match.fullMatchData.get(2).champKey).toLowerCase();
+                int resID3 = context.getResources().getIdentifier(sum3, "drawable", context.getPackageName());
+                ImageView sum3pic = (ImageView) table.findViewById(R.id.row3champ3pic);
+                sum3pic.setImageResource(resID3);
+                String sum8 = champData.get(match.fullMatchData.get(7).champKey).toLowerCase();
+                int resID8 = context.getResources().getIdentifier(sum8, "drawable", context.getPackageName());
+                ImageView sum8pic = (ImageView) table.findViewById(R.id.row3champ8pic);
+                sum8pic.setImageResource(resID8);
+                summoner3.setText(match.fullMatchData.get(2).summonerName);
+                summoner8.setText(match.fullMatchData.get(7).summonerName);
+                TextView sum3gold = (TextView) table.findViewById(R.id.champ3goldnum);
+                TextView sum3cs = (TextView) table.findViewById(R.id.champ3csnum);
+                sum3cs.setText(match.fullMatchData.get(2).totalMinionsKilled);
+                sum3gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(2).goldEarned)) / 1000)+" k");
+                TextView sum8gold = (TextView) table.findViewById(R.id.champ8goldnum);
+                TextView sum8cs = (TextView) table.findViewById(R.id.champ8csnum);
+                sum8cs.setText(match.fullMatchData.get(7).totalMinionsKilled);
+                sum8gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(7).goldEarned)) / 1000)+" k");
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                TextView summoner4 = (TextView) table.findViewById(R.id.row4champ4);
+                TextView summoner9 = (TextView) table.findViewById(R.id.row4champ9);
+                TextView summoner4kda = (TextView) table.findViewById(R.id.row4champ4kda);
+                TextView summoner9kda = (TextView) table.findViewById(R.id.row4champ9kda);
+                summoner4kda.setText(match.fullMatchData.get(3).kills+"/"+match.fullMatchData.get(3).deaths+"/"+match.fullMatchData.get(3).assists+"\n");
+                summoner9kda.setText(match.fullMatchData.get(8).kills+"/"+match.fullMatchData.get(8).deaths+"/"+match.fullMatchData.get(8).assists+"\n");
+                String sum4 = champData.get(match.fullMatchData.get(3).champKey).toLowerCase();
+                int resID4 = context.getResources().getIdentifier(sum4, "drawable", context.getPackageName());
+                ImageView sum4pic = (ImageView) table.findViewById(R.id.row4champ4pic);
+                sum4pic.setImageResource(resID4);
+                String sum9 = champData.get(match.fullMatchData.get(8).champKey).toLowerCase();
+                int resID9 = context.getResources().getIdentifier(sum9, "drawable", context.getPackageName());
+                ImageView sum9pic = (ImageView) table.findViewById(R.id.row4champ9pic);
+                sum9pic.setImageResource(resID9);
+                summoner4.setText(match.fullMatchData.get(3).summonerName);
+                summoner9.setText(match.fullMatchData.get(8).summonerName);
+                TextView sum4gold = (TextView) table.findViewById(R.id.champ4goldnum);
+                TextView sum4cs = (TextView) table.findViewById(R.id.champ4csnum);
+                sum4cs.setText(match.fullMatchData.get(3).totalMinionsKilled);
+                sum4gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(3).goldEarned)) / 1000)+" k");
+                TextView sum9gold = (TextView) table.findViewById(R.id.champ9goldnum);
+                TextView sum9cs = (TextView) table.findViewById(R.id.champ9csnum);
+                sum9cs.setText(match.fullMatchData.get(8).totalMinionsKilled);
+                sum9gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(8).goldEarned)) / 1000)+" k");
+
+                TextView summoner5 = (TextView) table.findViewById(R.id.row5champ5);
+                TextView summoner10 = (TextView) table.findViewById(R.id.row5champ10);
+                TextView summoner5kda = (TextView) table.findViewById(R.id.row5champ5kda);
+                TextView summoner10kda = (TextView) table.findViewById(R.id.row5champ10kda);
+                summoner5kda.setText(match.fullMatchData.get(4).kills+"/"+match.fullMatchData.get(4).deaths+"/"+match.fullMatchData.get(4).assists+"\n");
+                summoner10kda.setText(match.fullMatchData.get(9).kills+"/"+match.fullMatchData.get(9).deaths+"/"+match.fullMatchData.get(9).assists+"\n");
+                String sum5 = champData.get(match.fullMatchData.get(4).champKey).toLowerCase();
+                int resID5 = context.getResources().getIdentifier(sum5, "drawable", context.getPackageName());
+                ImageView sum5pic = (ImageView) table.findViewById(R.id.row5champ5pic);
+                sum5pic.setImageResource(resID5);
+                String sum10 = champData.get(match.fullMatchData.get(9).champKey).toLowerCase();
+                int resID10 = context.getResources().getIdentifier(sum10, "drawable", context.getPackageName());
+                ImageView sum10pic = (ImageView) table.findViewById(R.id.row5champ10pic);
+                sum10pic.setImageResource(resID10);
+        //        new DownloadImageTask((ImageView) table.findViewById(R.id.row5champ5pic))
+        //                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/champion/"+(champData.get(match.fullMatchData.get(4).champKey)).replaceAll("\\s+","")+".png");
+        //        new DownloadImageTask((ImageView) table.findViewById(R.id.row5champ10pic))
+        //                .execute("http://ddragon.leagueoflegends.com/cdn/7.10.1/img/champion/"+(champData.get(match.fullMatchData.get(9).champKey)).replaceAll("\\s+","")+".png");
+                summoner5.setText(match.fullMatchData.get(4).summonerName);
+                summoner10.setText(match.fullMatchData.get(9).summonerName);
+                TextView sum5gold = (TextView) table.findViewById(R.id.champ5goldnum);
+                TextView sum5cs = (TextView) table.findViewById(R.id.champ5csnum);
+                sum5cs.setText(match.fullMatchData.get(4).totalMinionsKilled);
+                sum5gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(4).goldEarned)) / 1000)+" k");
+                TextView sum10gold = (TextView) table.findViewById(R.id.champ10goldnum);
+                TextView sum10cs = (TextView) table.findViewById(R.id.champ10csnum);
+                sum10cs.setText(match.fullMatchData.get(9).totalMinionsKilled);
+                sum10gold.setText(String.format("%.1f",(Float.parseFloat(match.fullMatchData.get(9).goldEarned)) / 1000)+" k");
+
+
+                SmartImageView c1i1 = (SmartImageView) table.findViewById(R.id.champ1item1);
+                c1i1.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[0]+".png");
+                SmartImageView c1i2 = (SmartImageView) table.findViewById(R.id.champ1item2);
+                c1i2.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[1]+".png");
+                SmartImageView c1i3 = (SmartImageView) table.findViewById(R.id.champ1item3);
+                c1i3.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[2]+".png");
+                SmartImageView c1i4 = (SmartImageView) table.findViewById(R.id.champ1item4);
+                c1i4.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[3]+".png");
+                SmartImageView c1i5 = (SmartImageView) table.findViewById(R.id.champ1item5);
+                c1i5.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[4]+".png");
+                SmartImageView c1i6 = (SmartImageView) table.findViewById(R.id.champ1item6);
+                c1i6.setImageUrl("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(0).items[5]+".png");
+
+                final ImageView c2i1 = (ImageView)table.findViewById(R.id.champ2item1);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[0]+".png")
+                        .into(c2i1, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c2i1.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c2i2 = (ImageView)table.findViewById(R.id.champ2item2);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[1]+".png")
+                        .into(c2i2, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c2i2.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c2i3 = (ImageView)table.findViewById(R.id.champ2item3);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[2]+".png")
+                        .into(c2i3, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c2i3.setImageBitmap(bmp);
+                            }
+                        });
+
+                final ImageView c2i4 = (ImageView)table.findViewById(R.id.champ2item4);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[3]+".png")
+                        .into(c2i4, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c2i4.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c2i5 = (ImageView)table.findViewById(R.id.champ2item5);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[4]+".png")
+                        .into(c2i5, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c2i5.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c2i6 = (ImageView)table.findViewById(R.id.champ2item6);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(1).items[5]+".png")
+                        .into(c2i6, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c2i6.setImageBitmap(bmp);
+                            }
+                        });
+
+                final ImageView c3i1 = (ImageView)table.findViewById(R.id.champ3item1);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[0]+".png")
+                        .into(c3i1, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c3i1.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c3i2 = (ImageView)table.findViewById(R.id.champ3item2);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[1]+".png")
+                        .into(c3i2, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c3i2.setImageBitmap(bmp);
+                            }
+                        });
+
+                final ImageView c3i3 = (ImageView)table.findViewById(R.id.champ3item3);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[2]+".png")
+                        .into(c3i3, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c3i3.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c3i4 = (ImageView)table.findViewById(R.id.champ3item4);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[3]+".png")
+                        .into(c3i4, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c3i4.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c3i5 = (ImageView)table.findViewById(R.id.champ3item5);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[4]+".png")
+                        .into(c3i5, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c3i5.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c3i6 = (ImageView)table.findViewById(R.id.champ3item6);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(2).items[5]+".png")
+                        .into(c3i6, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c3i6.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c4i1 = (ImageView)table.findViewById(R.id.champ4item1);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[0]+".png")
+                        .into(c4i1, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c4i1.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c4i2 = (ImageView)table.findViewById(R.id.champ4item2);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[1]+".png")
+                        .into(c4i2, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c4i2.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c4i3 = (ImageView)table.findViewById(R.id.champ4item3);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[2]+".png")
+                        .into(c4i3, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c4i3.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c4i4 = (ImageView)table.findViewById(R.id.champ4item4);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[3]+".png")
+                        .into(c4i4, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c4i4.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c4i5 = (ImageView)table.findViewById(R.id.champ4item5);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[4]+".png")
+                        .into(c4i5, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c4i5.setImageBitmap(bmp);
+                            }
+                        });
+                final ImageView c4i6 = (ImageView)table.findViewById(R.id.champ4item6);
+                Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(3).items[5]+".png")
+                        .into(c4i6, new com.squareup.picasso.Callback() {
+                            public void onSuccess() {
+                            }
+                            public void onError() {
+                                c4i6.setImageBitmap(bmp);
+                            }
+                        });
+
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item1))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[0]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item2))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[1]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item3))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[2]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item4))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[3]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item5))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[4]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ5item6))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(4).items[5]+".png");
+
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item1))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[0]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item2))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[1]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item3))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[2]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item4))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[3]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item5))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[4]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ6item6))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(5).items[5]+".png");
+
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item1))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[0]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item2))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[1]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item3))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[2]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item4))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[3]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item5))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[4]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ7item6))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(6).items[5]+".png");
+
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item1))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[0]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item2))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[1]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item3))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[2]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item4))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[3]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item5))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[4]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ8item6))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(7).items[5]+".png");
+
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item1))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[0]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item2))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[1]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item3))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[2]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item4))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[3]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item5))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[4]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ9item6))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(8).items[5]+".png");
+
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item1))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[0]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item2))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[1]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item3))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[2]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item4))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[3]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item5))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[4]+".png");
+                new DownloadImageTask((ImageView) table.findViewById(R.id.champ10item6))
+                        .execute("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/"+match.fullMatchData.get(9).items[5]+".png");
+
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+        }
     }
 }
 

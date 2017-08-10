@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         fullMatch = new HashMap<String, Match>();
         summonerSpellData = new HashMap<String, String>();
         DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + String.valueOf(summoner.accountId) + "?queue=420&season=8&api_key=" + API_KEY});
+        task.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + String.valueOf(summoner.accountId) + "?queue=420&endIndex=10&beginIndex=0&api_key=" + API_KEY});
         loadJSONFromAsset();
         editText2 = (EditText) findViewById(R.id.editText2);
         editText2.setText(sum);
