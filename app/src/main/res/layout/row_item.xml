@@ -176,7 +176,7 @@
                     android:text="TextView"
                     android:textAlignment="center"
                     android:textColor="#375CD4"
-                    android:textSize="16sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -185,7 +185,8 @@
                     android:layout_height="match_parent"
                     android:text="TextView"
                     android:textAlignment="center"
-                    android:textColor="#D4AF37" />
+                    android:textColor="#D4AF37"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -208,7 +209,7 @@
                     android:layout_height="match_parent"
                     android:text="TextView"
                     android:textAlignment="center"
-                    android:textSize="16sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -216,7 +217,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="TextView"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textSize="12sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -296,6 +298,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_weight="0"
+                        android:paddingRight="1dp"
                         app:srcCompat="@mipmap/ic_launcher" />
 
                     <TextView
@@ -374,7 +377,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/gold"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ1goldnum"
@@ -382,7 +385,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -397,7 +400,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/cs"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ1csnum"
@@ -405,7 +408,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
                         </LinearLayout>
 
                         <TextView
@@ -438,6 +441,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_weight="0"
+                        android:paddingRight="1dp"
                         app:srcCompat="@mipmap/ic_launcher" />
 
                     <TextView
@@ -516,7 +520,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/gold"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ2goldnum"
@@ -524,7 +528,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -539,7 +543,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/cs"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ2csnum"
@@ -547,7 +551,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                         </LinearLayout>
 
@@ -582,6 +586,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_weight="0"
+                        android:paddingRight="1dp"
                         app:srcCompat="@mipmap/ic_launcher" />
 
                     <TextView
@@ -660,7 +665,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/gold"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ3goldnum"
@@ -668,7 +673,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -683,7 +688,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/cs"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ3csnum"
@@ -691,7 +696,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                         </LinearLayout>
 
@@ -726,6 +731,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_weight="0"
+                        android:paddingRight="1dp"
                         app:srcCompat="@mipmap/ic_launcher" />
 
                     <TextView
@@ -804,7 +810,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/gold"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ4goldnum"
@@ -812,7 +818,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -827,7 +833,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/cs"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ4csnum"
@@ -835,7 +841,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                         </LinearLayout>
 
@@ -873,6 +879,7 @@
                         android:layout_height="32dp"
                         android:layout_gravity="left"
                         android:layout_weight="0"
+                        android:paddingRight="1dp"
                         app:srcCompat="@mipmap/ic_launcher" />
 
                     <TextView
@@ -952,7 +959,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/gold"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ5goldnum"
@@ -960,7 +967,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -975,7 +982,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/cs"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ5csnum"
@@ -983,7 +990,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                         </LinearLayout>
 
@@ -1020,6 +1027,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_weight="0"
+                        android:paddingRight="1dp"
                         app:srcCompat="@mipmap/ic_launcher" />
 
                     <TextView
@@ -1098,7 +1106,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/gold"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ6goldnum"
@@ -1106,7 +1114,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -1121,7 +1129,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/cs"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ6csnum"
@@ -1129,7 +1137,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                         </LinearLayout>
 
@@ -1164,6 +1172,7 @@
                         android:layout_height="32dp"
                         android:layout_gravity="left"
                         android:layout_weight="0"
+                        android:paddingRight="1dp"
                         app:srcCompat="@mipmap/ic_launcher" />
 
                     <TextView
@@ -1243,7 +1252,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/gold"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ7goldnum"
@@ -1251,7 +1260,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -1266,7 +1275,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/cs"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ7csnum"
@@ -1274,7 +1283,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                         </LinearLayout>
 
@@ -1308,6 +1317,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_weight="0"
+                        android:paddingRight="1dp"
                         app:srcCompat="@mipmap/ic_launcher" />
 
                     <TextView
@@ -1386,7 +1396,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/gold"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ8goldnum"
@@ -1394,7 +1404,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -1409,7 +1419,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/cs"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ8csnum"
@@ -1417,7 +1427,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                         </LinearLayout>
 
@@ -1451,6 +1461,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_weight="0"
+                        android:paddingRight="1dp"
                         app:srcCompat="@mipmap/ic_launcher" />
 
                     <TextView
@@ -1529,7 +1540,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/gold"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ9goldnum"
@@ -1537,7 +1548,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -1552,7 +1563,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/cs"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ9csnum"
@@ -1560,7 +1571,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                         </LinearLayout>
 
@@ -1594,6 +1605,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_weight="0"
+                        android:paddingRight="1dp"
                         app:srcCompat="@mipmap/ic_launcher" />
 
                     <TextView
@@ -1672,7 +1684,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/gold"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ10goldnum"
@@ -1680,7 +1692,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -1695,7 +1707,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/cs"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                             <TextView
                                 android:id="@+id/champ10csnum"
@@ -1703,7 +1715,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="TextView"
                                 android:textAlignment="center"
-                                android:textSize="10sp" />
+                                android:textSize="8sp" />
 
                         </LinearLayout>
 

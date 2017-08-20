@@ -141,6 +141,8 @@ public class ExpandableAdapter extends BaseAdapter {
         Item item = items.get(position);
         fullMatch=item.matchList;
         //if(theRow.tag)
+
+        //convertView.setBackgroundColor(Color.RED);
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         final Bitmap bmp = Bitmap.createBitmap(64, 64, conf);
         bmp.eraseColor(Color.GRAY);
@@ -233,10 +235,10 @@ public class ExpandableAdapter extends BaseAdapter {
         theRow.gold.setText(String.format("%.2f", Float.parseFloat(item.gold) / 1000) + " k");
         if (item.win.equals("true")) {
             theRow.win.setText("VICTORY");
-            theRow.win.setTextColor(Color.GREEN);
+            convertView.setBackgroundColor(Color.argb(100,46, 204, 113));
         } else if (item.win.equals("false")) {
             theRow.win.setText("DEFEAT");
-            theRow.win.setTextColor(Color.RED);
+            convertView.setBackgroundColor(Color.argb(100,231, 76, 60));
         }
         // return the view
         theRow.time.setText(DateUtils.formatElapsedTime(Long.parseLong(item.time)).toString());

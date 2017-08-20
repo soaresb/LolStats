@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         fullMatch = new HashMap<String, Match>();
         summonerSpellData = new HashMap<String, String>();
         DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + String.valueOf(summoner.accountId) + "?queue=420&endIndex=10&beginIndex=0&api_key=" + API_KEY});
+        task.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + String.valueOf(summoner.accountId) + "?queue=420&endIndex=20&beginIndex=0&api_key=" + API_KEY});
         loadJSONFromAsset();
         editText2 = (EditText) findViewById(R.id.editText2);
         editText2.setText(sum);
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
         List<Item> items = new ArrayList<>();
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 12; i++) {
             Item item = new Item();
             item.title = statsList.get(i).kills;
             item.description = summoner.gameIds.get(i);
@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
                 int tempp = summoner.gameIds.size();
 //                GetMatchData getMatchData = new GetMatchData();
 //                getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(0) + "?api_key="+API_KEY});
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < 12; i++) {
                     GetMatchData getMatchData = new GetMatchData();
                     getMatchData.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matches/" + summoner.gameIds.get(i) + "?api_key=" + API_KEY});
                 }
