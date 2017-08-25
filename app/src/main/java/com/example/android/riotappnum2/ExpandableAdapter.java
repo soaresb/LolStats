@@ -156,7 +156,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item6.setImageBitmap(bmp);
+                        //theRow.item6.setImageBitmap(bmp);
                     }
                 });
         Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item5 + ".png")
@@ -164,7 +164,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item5.setImageBitmap(bmp);
+                        //theRow.item5.setImageBitmap(bmp);
                     }
                 });
         Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item1 + ".png")
@@ -172,7 +172,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item1.setImageBitmap(bmp);
+                        //theRow.item1.setImageBitmap(bmp);
                     }
                 });
         Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item2 + ".png")
@@ -180,7 +180,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item2.setImageBitmap(bmp);
+                        //theRow.item2.setImageBitmap(bmp);
                     }
                 });
         Picasso.with(context).load("http://ddragon.leagueoflegends.com/cdn/7.14.1/img/item/" + item.item3 + ".png")
@@ -188,7 +188,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item3.setImageBitmap(bmp);
+                        //theRow.item3.setImageBitmap(bmp);
                     }
                         });
 
@@ -197,7 +197,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item4.setImageBitmap(bmp);
+                        //theRow.item4.setImageBitmap(bmp);
                     }
                 });
         new DownloadImageTask(theRow.spell1)
@@ -230,7 +230,8 @@ public class ExpandableAdapter extends BaseAdapter {
         int resID = context.getResources().getIdentifier(icon, "drawable", context.getPackageName());
         theRow.mIvArrow.setImageResource(resID);
         theRow.kdaview.setText(item.kills + "/" + item.deaths + "/" + item.assists);
-        theRow.decKDA.setText(String.format("%.2f", (Float.parseFloat(item.kills) + Float.parseFloat(item.assists)) / Float.parseFloat(item.deaths)) + " KDA");
+        theRow.decKDA.setText(String.format("%.2f", (Float.parseFloat(item.kills) + Float.parseFloat(item.assists)) / Float.parseFloat(item.deaths)));
+        theRow.decKDA.append(" KDA");
         theRow.creeps.setText(item.cs + " CS");
         theRow.gold.setText(String.format("%.2f", Float.parseFloat(item.gold) / 1000) + " k");
         if (item.win.equals("true")) {
