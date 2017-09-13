@@ -33,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
     public String accountID;
     public String summonerID;
     public String summonerName;
+    public String summonerIcon;
     private String apiKey;
     private static final String API_KEY = BuildConfig.API_KEY;
     @Override
@@ -92,10 +93,12 @@ public class HomeActivity extends AppCompatActivity {
                 accountID = json.getString("accountId");
                 summonerID = json.getString("id");
                 summonerName=json.getString("name");
+                summonerIcon=json.getString("profileIconId");
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 intent.putExtra("ACCOUNTID", accountID);
                 intent.putExtra("ID",summonerID);
                 intent.putExtra("SUMMONERNAME",summonerName);
+                intent.putExtra("SUMMONERICON",summonerIcon);
                 String FILENAME = "recentsummoners.txt";
                 FileOutputStream fos =openFileOutput(FILENAME, Context.MODE_PRIVATE);
                 byte [] buf = accountID.getBytes();

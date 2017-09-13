@@ -12,6 +12,7 @@ public class Summoner {
     public String summonerId;
     public int accountId;
     public List<String> gameIds;
+    public String name;
 
     public Summoner(String summId){
         summonerId = summId;
