@@ -317,42 +317,42 @@
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
-                        <com.loopj.android.image.SmartImageView
+                        <ImageView
                             android:id="@+id/champ1item1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             app:srcCompat="@mipmap/ic_launcher" />
 
-                        <com.loopj.android.image.SmartImageView
+                        <ImageView
                             android:id="@+id/champ1item2"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             app:srcCompat="@mipmap/ic_launcher" />
 
-                        <com.loopj.android.image.SmartImageView
+                        <ImageView
                             android:id="@+id/champ1item3"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             app:srcCompat="@mipmap/ic_launcher" />
 
-                        <com.loopj.android.image.SmartImageView
+                        <ImageView
                             android:id="@+id/champ1item4"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             app:srcCompat="@mipmap/ic_launcher" />
 
-                        <com.loopj.android.image.SmartImageView
+                        <ImageView
                             android:id="@+id/champ1item5"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             app:srcCompat="@mipmap/ic_launcher" />
 
-                        <com.loopj.android.image.SmartImageView
+                        <ImageView
                             android:id="@+id/champ1item6"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

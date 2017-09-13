@@ -11,6 +11,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.app.ActionBarActivity;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,7 +27,9 @@ import okhttp3.Response;
 public class HomeActivity extends AppCompatActivity {
     private EditText editText;
     private Button button;
+    private Button firebaseButton;
     private TextView textView;
+    private DatabaseReference mDatabase;
     public String accountID;
     public String summonerID;
     public String summonerName;
@@ -37,6 +43,18 @@ public class HomeActivity extends AppCompatActivity {
         editText = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button2);
         textView = (TextView) findViewById(R.id.textView) ;
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        firebaseButton = (Button) findViewById(R.id.firebaseButton);
+        firebaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 1 - Create child in root
+                // 2 - Assign some value to the child object
+
+                mDatabase.child("Name").setValue("Brian");
+
+            }
+        });
 
         //https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/gladdyy
     }
