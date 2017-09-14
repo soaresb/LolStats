@@ -7,10 +7,11 @@
     android:focusableInTouchMode="true">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/linearLayout">
+        android:background="@android:color/darker_gray"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/linearLayout6"
@@ -20,7 +21,6 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
-            android:background="@android:color/holo_blue_light"
             android:orientation="horizontal">
 
             <EditText
@@ -52,8 +52,8 @@
 
             <ImageView
                 android:id="@+id/summIcon"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="80dp"
+                android:layout_height="70dp"
                 android:layout_weight="0"
                 app:srcCompat="@mipmap/ic_launcher" />
 
@@ -62,7 +62,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textAlignment="viewStart"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/summRank"

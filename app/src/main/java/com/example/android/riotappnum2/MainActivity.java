@@ -101,8 +101,7 @@ public class MainActivity extends AppCompatActivity {
         summRank = (TextView) findViewById(R.id.summRank);
         summWL = (TextView) findViewById(R.id.summWL);
         button=(Button) findViewById(R.id.button2) ;
-        new DownloadImageTask((ImageView) findViewById(R.id.summIcon))
-                .execute("http://ddragon.leagueoflegends.com/cdn/7.17.1/img/profileicon/"+summonerIcon+".png");
+
         loadSummonerSpells();
         lvItems = (ListView) findViewById(R.id.lv_items);
 //        ExpandableAdapter adapter = getAdapter();
@@ -546,6 +545,32 @@ public class MainActivity extends AppCompatActivity {
                 summRank.setText(tier+" "+addTier+" "+lp+" LP");
                 summWL.setText(wins+" W ");
                 summWL.append(losses+" L");
+                if (tier.equals("GOLD")){
+                    summIcon.setImageResource(R.drawable.goldbadge);
+                }
+                else if (tier.equals("BRONZE")){
+                    summIcon.setImageResource(R.drawable.bronzebadge);
+                }
+                else if (tier.equals("SILVER")){
+                    summIcon.setImageResource(R.drawable.silverbadge);
+                }
+                else if (tier.equals("PLATINUM")){
+                    summIcon.setImageResource(R.drawable.platinumbadge);
+                }
+                else if (tier.equals("DIAMOND")){
+                    summIcon.setImageResource(R.drawable.diamondbadge);
+                }
+                else if (tier.equals("MASTER")){
+                    summIcon.setImageResource(R.drawable.masterbadge);
+                }
+                else if (tier.equals("CHALLENGER")){
+                    summIcon.setImageResource(R.drawable.challengerbadge);
+                }
+                else{
+                    summIcon.setImageResource(R.drawable.blankbadge);
+                }
+
+
 
             }
             catch (Exception e) {
