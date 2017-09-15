@@ -9,3 +9,5 @@
 .externalNativeBuild
 /gradle.properties
 gradle.properties
+config.py
+*.pyc 
