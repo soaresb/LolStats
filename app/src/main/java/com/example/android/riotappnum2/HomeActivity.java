@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +45,8 @@ public class HomeActivity extends AppCompatActivity {
         editText = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button2);
         textView = (TextView) findViewById(R.id.textView) ;
+        TestLocalHost testLocalHost = new TestLocalHost();
+        testLocalHost.execute(new String[]{"http://10.0.2.2:8080"});
         mDatabase = FirebaseDatabase.getInstance().getReference();
         firebaseButton = (Button) findViewById(R.id.firebaseButton);
         firebaseButton.setOnClickListener(new View.OnClickListener() {
@@ -122,5 +125,50 @@ public class HomeActivity extends AppCompatActivity {
     public void onGetFullStats(View view){
         Intent intent = new Intent(getBaseContext(), SeasonStats.class);
         startActivity(intent);
+    }
+
+    public class TestLocalHost extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            // we use the OkHttp library from https://github.com/square/okhttp
+            OkHttpClient client = new OkHttpClient();
+            Request request =
+                    new Request.Builder()
+                            .url(urls[0])
+                            .build();
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    return response.body().string();
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+            return null;
+        }
+
+        //"accountId": 50300517,
+        //"id": 35711275,
+        //use the matchv3 to get the 20 most recent matches
+        //gather the match ids for those 20 matches in an array
+        //use those 20 match ids on the api call using a matchid to get stats
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                JSONObject json = new JSONObject(result);
+                String temp = json.getString("name");
+                String temp2 = temp;
+
+
+            }
+            catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Invaild Summoner Name", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+
+            }
+
+        }
     }
 }
