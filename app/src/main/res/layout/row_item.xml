@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
-                    android:layout_weight="1"
+                    android:background="@android:color/darker_gray"
                     app:layout_constraintLeft_toRightOf="@+id/item1"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@android:drawable/checkbox_off_background" />
@@ -128,6 +128,8 @@
                     android:layout_marginBottom="0dp"
                     android:layout_marginTop="0dp"
                     android:layout_weight="1"
+                    android:background="@android:color/darker_gray"
+                    android:visibility="visible"
                     app:layout_constraintLeft_toRightOf="@+id/item3"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@android:drawable/checkbox_off_background" />
@@ -140,6 +142,7 @@
                     android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:adjustViewBounds="false"
+                    android:background="@android:color/darker_gray"
                     android:visibility="visible"
                     app:layout_constraintLeft_toRightOf="@+id/item4"
                     app:layout_constraintTop_toBottomOf="@+id/item5"

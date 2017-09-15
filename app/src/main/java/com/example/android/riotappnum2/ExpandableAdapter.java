@@ -152,7 +152,12 @@ public class ExpandableAdapter extends BaseAdapter {
         Bitmap.Config conff = Bitmap.Config.ARGB_8888;
         Bitmap bmpp = Bitmap.createBitmap(64, 64, conf);
         bmpp.eraseColor(Color.GRAY);
-        //theRow.item6.setImageBitmap(bmpp);
+//        theRow.item6.setVisibility(View.VISIBLE);
+//        theRow.item1.setVisibility(View.VISIBLE);
+//        theRow.item2.setVisibility(View.VISIBLE);
+//        theRow.item3.setVisibility(View.VISIBLE);
+//        theRow.item4.setVisibility(View.VISIBLE);
+//        theRow.item5.setVisibility(View.VISIBLE);
         Picasso.with(context).load(currentPatchItemURL + item.item6 + ".png")
                 .into(theRow.item6, new com.squareup.picasso.Callback() {
                     public void onSuccess() {

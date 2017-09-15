@@ -9,6 +9,9 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -70,9 +73,7 @@ public class MainActivity extends AppCompatActivity {
     Button button;
     ProgressDialog progress2;
     ImageView summIcon;
-    TextView summName;
-    TextView summRank;
-    TextView summWL;
+    TextView summData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,9 +98,7 @@ public class MainActivity extends AppCompatActivity {
         editText2 = (EditText) findViewById(R.id.editText2);
         editText2.setText(sum);
         summIcon = (ImageView) findViewById(R.id.summIcon);
-        summName = (TextView) findViewById(R.id.summName);
-        summRank = (TextView) findViewById(R.id.summRank);
-        summWL = (TextView) findViewById(R.id.summWL);
+        summData = (TextView) findViewById(R.id.summData);
         button=(Button) findViewById(R.id.button2) ;
 
         loadSummonerSpells();
@@ -525,6 +524,7 @@ public class MainActivity extends AppCompatActivity {
                 String tier = jsonO.getString("tier");
                 String queue = jsonO.getString("queue");
                 String leagueName = jsonO.getString("name");
+
                 JSONArray entries = jsonO.getJSONArray("entries");
                 String addTier="";
                 String wins="";
@@ -541,10 +541,17 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                summName.setText(summoner.name);
-                summRank.setText(tier+" "+addTier+" "+lp+" LP");
-                summWL.setText(wins+" W ");
-                summWL.append(losses+" L");
+                summData.setText(summoner.name+'\n');
+                summData.append(leagueName+'\n');
+                summData.append(tier+" "+addTier+" - "+lp+" LP \n");
+                String tempWL = wins+" W " + losses+" L";
+                summData.append(tempWL);
+                //if I end up wanting to change the color of text in the textview I can use this
+//                summData.setText(wins +losses, TextView.BufferType.SPANNABLE);
+//                Spannable s = (Spannable)summData.getText();
+//                int start = wins.length();
+//                int end = start + losses.length();
+//                s.setSpan(new ForegroundColorSpan(0xFFFF0000), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 if (tier.equals("GOLD")){
                     summIcon.setImageResource(R.drawable.goldbadge);
                 }
