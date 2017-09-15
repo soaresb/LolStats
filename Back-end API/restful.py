@@ -1,8 +1,9 @@
 from flask import Flask, jsonify, request
 import mysql.connector
 import requests
+import threading
 import config
-
+apiKey=config.api_key
 app=Flask(__name__)
 
 # cnx = mysql.connector.connect(user='bsoares', password='GOmanny1436',
@@ -13,25 +14,30 @@ app=Flask(__name__)
          
 
 
-@app.route('/', methods=['GET'])
-def test():
-	# cursor.execute(query)
-	# rows = cursor.fetchall()
-	temp="ask"
-	# cnx.close()
-	#return jsonify({'message':rows})
-	r=requests.get("https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/gladdyy?api_key=RGAPI-513c5309-2e32-4bd2-802a-ceace452264b")
+@app.route('/summoner/<string:name>', methods=['GET'])
+def summoner(name):
+	r=requests.get("https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/"+name+"?api_key="+apiKey)
 	json=r.json()
 	return jsonify(json)
 
-@app.route('/lang', methods=['GET'])
-def returnLangs():
-	return jsonify({'languages':languages})
+@app.route('/matchlist/<string:accountId>', methods=['GET'])
+def getMatchList(accountId):
+	matchlist=requests.get("https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/"+accountId+"?queue=420&endIndex=20&beginIndex=0&api_key="+apiKey)
+	json=matchlist.json()
+	return jsonify(json)
 
-@app.route('/lang/<string:name>', methods=['GET'])
-def returnSingle(name):
-	langs = [language for language in languages if language['name']==name]
-	return jsonify({'language': langs[0]})
+@app.route('/league/<string:summonerId>', methods=['GET'])
+def league(summonerId):
+	league=requests.get("https://na1.api.riotgames.com/lol/league/v3/leagues/by-summoner/"+summonerId+"?api_key="+apiKey)
+	json=league.json()
+	return jsonify(json)
+
+@app.route('/matchData/<string:matchId>', methods=['GET'])
+def getMatchData(matchId):
+	threading.Timer(1.0, getMatchData).start()
+	matchData=requests.get("https://na1.api.riotgames.com/lol/match/v3/matches/"+matchId+"?api_key="+apiKey)
+	json=matchData.json()
+	return jsonify(json)
 
 
 if __name__ =='__main__':

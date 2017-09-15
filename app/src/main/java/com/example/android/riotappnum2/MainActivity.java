@@ -91,9 +91,9 @@ public class MainActivity extends AppCompatActivity {
         fullMatch = new HashMap<String, Match>();
         summonerSpellData = new HashMap<String, String>();
         DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute(new String[]{"https://na1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + String.valueOf(summoner.accountId) + "?queue=420&endIndex=20&beginIndex=0&api_key=" + API_KEY});
+        task.execute(new String[]{"http://10.0.2.2:8080/matchlist/" + String.valueOf(summoner.accountId)});
         GetSummonerLeague getSummonerLeague = new GetSummonerLeague();
-        getSummonerLeague.execute(new String[]{"https://na1.api.riotgames.com/lol/league/v3/leagues/by-summoner/"+String.valueOf(summoner.summonerId)+"?api_key="+API_KEY});
+        getSummonerLeague.execute(new String[]{"http://10.0.2.2:8080/league/"+String.valueOf(summoner.summonerId)});
         loadJSONFromAsset();
         editText2 = (EditText) findViewById(R.id.editText2);
         editText2.setText(sum);
@@ -543,7 +543,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 summData.setText(summoner.name+'\n');
                 summData.append(leagueName+'\n');
-                summData.append(tier+" "+addTier+" - "+lp+" LP \n");
+                summData.append(tier+" "+addTier+" : "+lp+" LP \n");
                 String tempWL = wins+" W " + losses+" L";
                 summData.append(tempWL);
                 //if I end up wanting to change the color of text in the textview I can use this
