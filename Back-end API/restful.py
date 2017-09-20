@@ -37,7 +37,7 @@ def getMatchData(matchId):
 	threading.Timer(1.0, getMatchData).start()
 	matchData=requests.get("https://na1.api.riotgames.com/lol/match/v3/matches/"+matchId+"?api_key="+apiKey)
 	json=matchData.json()
-	return jsonify(json)
+	return jsonify(json) 
 
 
 if __name__ =='__main__':
