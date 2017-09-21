@@ -46,17 +46,7 @@ public class HomeActivity extends AppCompatActivity {
         button = (Button) findViewById(R.id.button2);
         textView = (TextView) findViewById(R.id.textView) ;
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        firebaseButton = (Button) findViewById(R.id.firebaseButton);
-        firebaseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 1 - Create child in root
-                // 2 - Assign some value to the child object
 
-                mDatabase.child("Name").setValue("Brian");
-
-            }
-        });
 
         //https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/gladdyy
     }
