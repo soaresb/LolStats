@@ -34,6 +34,7 @@ def league(summonerId):
 
 @app.route('/matchData/<string:matchId>', methods=['GET'])
 def getMatchData(matchId):
+	#need to upgrade this to match with the timing in the app
 	threading.Timer(1.0, getMatchData).start()
 	matchData=requests.get("https://na1.api.riotgames.com/lol/match/v3/matches/"+matchId+"?api_key="+apiKey)
 	json=matchData.json()
