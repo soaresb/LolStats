@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
     Button button;
     ProgressDialog progress2;
     ImageView summIcon;
+    ImageView divIcon;
+    TextView divData;
     TextView summData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +101,11 @@ public class MainActivity extends AppCompatActivity {
         editText2.setText(sum);
         summIcon = (ImageView) findViewById(R.id.summIcon);
         summData = (TextView) findViewById(R.id.summData);
+        divIcon = (ImageView) findViewById(R.id.divIcon);
+        divData = (TextView) findViewById(R.id.divData);
         button=(Button) findViewById(R.id.button2) ;
-
+        new DownloadImageTask(summIcon)
+                .execute("http://ddragon.leagueoflegends.com/cdn/7.19.1/img/profileicon/"+summonerIcon+".png");
         loadSummonerSpells();
         lvItems = (ListView) findViewById(R.id.lv_items);
 //        ExpandableAdapter adapter = getAdapter();
@@ -542,10 +547,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 summData.setText(summoner.name+'\n');
-                summData.append(leagueName+'\n');
-                summData.append(tier+" "+addTier+" : "+lp+" LP \n");
+                //summData.append(leagueName+'\n');
+                divData.setText(tier+" "+addTier+"\n");
+                divData.append(lp+" LP \n");
                 String tempWL = wins+" W " + losses+" L";
-                summData.append(tempWL);
+                divData.append(tempWL);
                 //if I end up wanting to change the color of text in the textview I can use this
 //                summData.setText(wins +losses, TextView.BufferType.SPANNABLE);
 //                Spannable s = (Spannable)summData.getText();
@@ -553,28 +559,28 @@ public class MainActivity extends AppCompatActivity {
 //                int end = start + losses.length();
 //                s.setSpan(new ForegroundColorSpan(0xFFFF0000), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 if (tier.equals("GOLD")){
-                    summIcon.setImageResource(R.drawable.goldbadge);
+                    divIcon.setImageResource(R.drawable.goldbadge);
                 }
                 else if (tier.equals("BRONZE")){
-                    summIcon.setImageResource(R.drawable.bronzebadge);
+                    divIcon.setImageResource(R.drawable.bronzebadge);
                 }
                 else if (tier.equals("SILVER")){
-                    summIcon.setImageResource(R.drawable.silverbadge);
+                    divIcon.setImageResource(R.drawable.silverbadge);
                 }
                 else if (tier.equals("PLATINUM")){
-                    summIcon.setImageResource(R.drawable.platinumbadge);
+                    divIcon.setImageResource(R.drawable.platinumbadge);
                 }
                 else if (tier.equals("DIAMOND")){
-                    summIcon.setImageResource(R.drawable.diamondbadge);
+                    divIcon.setImageResource(R.drawable.diamondbadge);
                 }
                 else if (tier.equals("MASTER")){
-                    summIcon.setImageResource(R.drawable.masterbadge);
+                    divIcon.setImageResource(R.drawable.masterbadge);
                 }
                 else if (tier.equals("CHALLENGER")){
-                    summIcon.setImageResource(R.drawable.challengerbadge);
+                    divIcon.setImageResource(R.drawable.challengerbadge);
                 }
                 else{
-                    summIcon.setImageResource(R.drawable.blankbadge);
+                    divIcon.setImageResource(R.drawable.blankbadge);
                 }
 
 
