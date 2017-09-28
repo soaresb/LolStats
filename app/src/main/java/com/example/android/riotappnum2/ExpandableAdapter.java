@@ -163,7 +163,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item6.setImageBitmap(bmp);
+                        //theRow.item6.setImageBitmap(bmp);
                     }
                 });
         Picasso.with(context).load(currentPatchItemURL + item.item5 + ".png")
@@ -171,7 +171,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item5.setImageBitmap(bmp);
+                        //theRow.item5.setImageBitmap(bmp);
                     }
                 });
         Picasso.with(context).load(currentPatchItemURL + item.item1 + ".png")
@@ -179,7 +179,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item1.setImageBitmap(bmp);
+                        //theRow.item1.setImageBitmap(bmp);
                     }
                 });
         Picasso.with(context).load(currentPatchItemURL + item.item2 + ".png")
@@ -187,7 +187,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item2.setImageBitmap(bmp);
+                        //theRow.item2.setImageBitmap(bmp);
                     }
                 });
         Picasso.with(context).load(currentPatchItemURL + item.item3 + ".png")
@@ -195,7 +195,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item3.setImageBitmap(bmp);
+                        //theRow.item3.setImageBitmap(bmp);
                     }
                         });
 
@@ -204,7 +204,7 @@ public class ExpandableAdapter extends BaseAdapter {
                     public void onSuccess() {
                     }
                     public void onError() {
-                        theRow.item4.setImageBitmap(bmp);
+                        //theRow.item4.setImageBitmap(bmp);
                     }
                 });
         new DownloadImageTask(theRow.spell1)

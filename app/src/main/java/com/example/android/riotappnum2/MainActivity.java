@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog progress2;
     ImageView summIcon;
     ImageView divIcon;
+    View thisV;
     TextView divData;
     TextView summData;
     @Override
@@ -88,14 +89,16 @@ public class MainActivity extends AppCompatActivity {
         summoner = new Summoner(id);
         summoner.name=sum;
         summoner.accountId = Integer.parseInt(accountid);
+        thisV = getWindow().getDecorView().findViewById(android.R.id.content);
+        thisV.setVisibility(View.GONE);
         statsList = new ArrayList<Stats>();
         champData = new HashMap<String, String>();
         fullMatch = new HashMap<String, Match>();
         summonerSpellData = new HashMap<String, String>();
         DownloadWebPageTask task = new DownloadWebPageTask();
-        task.execute(new String[]{"http://10.0.2.2:8080/matchlist/" + String.valueOf(summoner.accountId)});
+        task.execute(new String[]{"https://lolstats-backend.herokuapp.com/matchlist/" + String.valueOf(summoner.accountId)});
         GetSummonerLeague getSummonerLeague = new GetSummonerLeague();
-        getSummonerLeague.execute(new String[]{"http://10.0.2.2:8080/league/"+String.valueOf(summoner.summonerId)});
+        getSummonerLeague.execute(new String[]{"https://lolstats-backend.herokuapp.com/league/"+String.valueOf(summoner.summonerId)});
         loadJSONFromAsset();
         editText2 = (EditText) findViewById(R.id.editText2);
         editText2.setText(sum);
@@ -418,6 +421,7 @@ public class MainActivity extends AppCompatActivity {
                 if (statsList.size() >= 8) {
                     ExpandableAdapter adapter = getAdapter();
                     lvItems.setAdapter(adapter);
+                    thisV.setVisibility(View.VISIBLE);
                 }
 
             } catch (Exception e) {

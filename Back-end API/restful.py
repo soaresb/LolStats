@@ -40,6 +40,10 @@ def getMatchData(matchId):
 	json=matchData.json()
 	return jsonify(json) 
 
+@app.route('/', methods=['GET'])
+def index():
+	return ("Brian's")
+
 
 if __name__ =='__main__':
 	app.run(debug=True, port=8080)

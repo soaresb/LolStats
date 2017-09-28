@@ -108,7 +108,7 @@ public class HomeActivity extends AppCompatActivity {
     }
     public void OnClick(View view){
         GetSummonerData getSummonerData = new GetSummonerData();
-        getSummonerData.execute(new String[]{"http://10.0.2.2:8080/summoner/"+editText.getText().toString()});
+        getSummonerData.execute(new String[]{"https://lolstats-backend.herokuapp.com/summoner/"+editText.getText().toString()});
     }
     public void onGetFullStats(View view){
         Intent intent = new Intent(getBaseContext(), SeasonStats.class);
