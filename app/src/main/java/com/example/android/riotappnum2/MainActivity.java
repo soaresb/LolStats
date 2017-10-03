@@ -404,17 +404,6 @@ public class MainActivity extends AppCompatActivity {
                     newStats2.items[4] = temp.getString("item4");
                     newStats2.items[5] = temp.getString("item5");
                     fullMatch.put(json.getString("gameId"), thisMatch);
-//                    if(firstHalf){
-//                        if(i<=4){
-//                            newStats.totalDamage += Integer.valueOf(temp.getString("totalDamageDealtToChampions"));
-//                        }
-//
-//                    }
-//                    else{
-//                        if(i>=5){
-//                            newStats.totalDamage += Integer.valueOf(temp.getString("totalDamageDealtToChampions"));
-//                        }
-//                    }
 
 
                 }
