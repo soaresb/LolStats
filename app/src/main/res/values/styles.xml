@@ -21,6 +21,8 @@
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
-
+    <style name="temp">
+        
+    </style>
 
 </resources>
