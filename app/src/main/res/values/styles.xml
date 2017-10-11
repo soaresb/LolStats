@@ -22,9 +22,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="update">
-        
-    </style>
+    
 
 
 </resources>
