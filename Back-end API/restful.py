@@ -6,12 +6,7 @@ import config
 apiKey=config.api_key
 app=Flask(__name__)
 
-# cnx = mysql.connector.connect(user='bsoares', password='GOmanny1436',
-#                               host='rds-mysql-fanfootball.cwmwr07yxatm.us-east-1.rds.amazonaws.com',
-#                               database='FanFootball')
-# cursor = cnx.cursor()
-# query = ("SELECT * FROM RBTable")
-         
+
 
 
 @app.route('/summoner/<string:name>', methods=['GET'])
