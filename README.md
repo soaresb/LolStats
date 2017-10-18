@@ -9,5 +9,5 @@ This project is still under development and is still using a development API key
 ![ScreenShot](https://raw.github.com/soaresb/LolStats/master/demoPicture.png)
 
 
-##To Run
-###Please place your api key as a string in your gradle.properties file and name it API_KEY. 
+## To Run
+### Please place your api key as a string in your gradle.properties file and name it API_KEY. 
