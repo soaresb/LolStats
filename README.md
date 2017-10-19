@@ -10,4 +10,5 @@ This project is still under development and is still using a development API key
 
 
 ## To Run
+### Download and open in Andriod Studio
 ### Please place your api key as a string in your gradle.properties file and name it API_KEY. 
